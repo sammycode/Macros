@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{60DA7C1B-D07B-4BF7-AC11-A44D4AE1736F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>VF.Macros.Client</RootNamespace>
+    <AssemblyName>macros</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\LabelEventArgs.cs" />
+    <Compile Include="Controls\LabelTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\LabelTreeView.Designer.cs">
+      <DependentUpon>LabelTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MacroListViewItems\MacroListViewItem.cs" />
+    <Compile Include="Controls\MacrosListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MacrosListView.Designer.cs">
+      <DependentUpon>MacrosListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NavigationTreeNodes\LabelTreeNode.cs" />
+    <Compile Include="Controls\NavigationTreeNodes\MacroTreeNode.cs" />
+    <Compile Include="Controls\NavigationTreeNodes\RootSectionTreeNode.cs" />
+    <Compile Include="Controls\NavigationTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\NavigationTreeView.Designer.cs">
+      <DependentUpon>NavigationTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EditLabelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditLabelForm.Designer.cs">
+      <DependentUpon>EditLabelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportForm.Designer.cs">
+      <DependentUpon>ImportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MacroEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MacroEditorForm.Designer.cs">
+      <DependentUpon>MacroEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainFormOld.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainFormOld.Designer.cs">
+      <DependentUpon>MainFormOld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectLabelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectLabelForm.Designer.cs">
+      <DependentUpon>SelectLabelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MacrosAppContext.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\LabelTreeView.resx">
+      <DependentUpon>LabelTreeView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MacrosListView.resx">
+      <DependentUpon>MacrosListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\NavigationTreeView.resx">
+      <DependentUpon>NavigationTreeView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditLabelForm.resx">
+      <DependentUpon>EditLabelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportForm.resx">
+      <DependentUpon>ImportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MacroEditorForm.resx">
+      <DependentUpon>MacroEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainFormOld.resx">
+      <DependentUpon>MainFormOld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectLabelForm.resx">
+      <DependentUpon>SelectLabelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VF.Macros.Common\VF.Macros.Common.csproj">
+      <Project>{1c5a2fd9-24d8-4553-9137-4c18ae79b7e2}</Project>
+      <Name>VF.Macros.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.Data.AdoNet\VF.Macros.Data.AdoNet.csproj">
+      <Project>{ab622137-997d-4913-b0de-f0b4228aa1c8}</Project>
+      <Name>VF.Macros.Data.AdoNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.Data.SqlServer\VF.Macros.Data.SqlServer.csproj">
+      <Project>{e0694a9e-843d-4cf7-ad08-a24ca36d7bd6}</Project>
+      <Name>VF.Macros.Data.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.Data\VF.Macros.Data.csproj">
+      <Project>{1696a69f-13d3-403d-bd9a-fbe3a0ccd523}</Project>
+      <Name>VF.Macros.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.External.Nox\VF.Macros.External.Nox.csproj">
+      <Project>{3e1901b8-3889-468a-a65e-83d8530b5c68}</Project>
+      <Name>VF.Macros.External.Nox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.External\VF.Macros.External.csproj">
+      <Project>{e1b4bd68-9407-4616-80ea-5af5a31b96cf}</Project>
+      <Name>VF.Macros.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.Service.Standard\VF.Macros.Service.Standard.csproj">
+      <Project>{65eb6e65-9a6d-4ab7-86a9-71e3123bda5a}</Project>
+      <Name>VF.Macros.Service.Standard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VF.Macros.Service\VF.Macros.Service.csproj">
+      <Project>{5887a751-1e52-4947-8441-ff61de689316}</Project>
+      <Name>VF.Macros.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
