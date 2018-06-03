@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using log4net;
 
-using DataContract = VF.Macros.Common.Models;
+using Model = VF.Macros.Common.Models;
 using VF.Macros.Data;
 using VF.Macros.External;
 using VF.Macros.Service;
@@ -40,6 +40,11 @@ namespace VF.Macros.Service.Standard
         private IMacroImporter _macroImporter;
 
         /// <summary>
+        /// The Macro Assembler
+        /// </summary>
+        private IMacroAssembler _macroAssembler;
+
+        /// <summary>
         /// The Label Management Service
         /// </summary>
         private ILabelManagementService _labelManagementService;
@@ -50,13 +55,16 @@ namespace VF.Macros.Service.Standard
         /// <param name="dataRepository">The Data Repository</param>
         /// <param name="macroImporter">The Macro Importer</param>
         /// <param name="labelManagementService">The Label Management Service</param>
-        public StdExternalIntegrationServiceImpl(IDataRepository dataRepository, IMacroImporter macroImporter, ILabelManagementService labelManagementService)
+        /// <param name="macroAssembler">The Macro Assembler</param>
+        public StdExternalIntegrationServiceImpl(IDataRepository dataRepository, IMacroImporter macroImporter, ILabelManagementService labelManagementService,
+            IMacroAssembler macroAssembler)
         {
             try
             {
                 _dataRepository = dataRepository;
                 _macroImporter = macroImporter;
                 _labelManagementService = labelManagementService;
+                _macroAssembler = macroAssembler;
             }
             catch (Exception caught)
             {
@@ -149,6 +157,44 @@ namespace VF.Macros.Service.Standard
         }
 
         /// <summary>
+        /// Build Macro Action Assembly
+        /// </summary>
+        /// <param name="source">The External Macro Source</param>
+        /// <returns>The Macro Action Assembly</returns>
+        public IEnumerable<Model.Macro.Action> BuildMacroActionAssembly(string source)
+        {
+            try
+            {
+                var assembly = _macroAssembler.Build(source);
+                return assembly;
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Building Macro Action Assembly", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get Macro Action Assembly Source
+        /// </summary>
+        /// <param name="assembly">The Macro Action Assembly</param>
+        /// <returns>The Macro Action Assembly Source</returns>
+        public string GetMacroActionAssemblySource(IEnumerable<Model.Macro.Action> assembly)
+        {
+            try
+            {
+                var assemblySource = _macroAssembler.Disassemble(assembly);
+                return assemblySource;
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Getting Action Assembly Source", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Export Macros
         /// </summary>
         public void ExportMacros()
@@ -162,7 +208,7 @@ namespace VF.Macros.Service.Standard
         /// Get Import Label
         /// </summary>
         /// <returns>The Import Label</returns>
-        private DataContract.Metadata.Label GetImportLabel()
+        private Model.Metadata.Label GetImportLabel()
         {
             try
             {
@@ -172,7 +218,7 @@ namespace VF.Macros.Service.Standard
                                   select il).FirstOrDefault();
                 if (importLabel == null)
                 {
-                    _labelManagementService.CreateLabel(new DataContract.Metadata.Label { ParentID = null, Name = "Imported" });
+                    _labelManagementService.CreateLabel(new Model.Metadata.Label { ParentID = null, Name = "Imported" });
                     labels = _labelManagementService.GetAllLabels();
                     importLabel = (from il in labels
                                    where il.ParentID == null && il.Name == "Imported"
@@ -195,7 +241,7 @@ namespace VF.Macros.Service.Standard
         /// Get External Provider Import Label
         /// </summary>
         /// <returns>The External Provider Import Label</returns>
-        private DataContract.Metadata.Label GetExternalProviderImportLabel()
+        private Model.Metadata.Label GetExternalProviderImportLabel()
         {
             try
             {
@@ -207,7 +253,7 @@ namespace VF.Macros.Service.Standard
                                    select il).FirstOrDefault();
                 if (externalProviderImportLabel == null)
                 {
-                     _labelManagementService.CreateLabel(new DataContract.Metadata.Label { ParentID = importLabel.ID, Name = _macroImporter.ExternalProvider });
+                     _labelManagementService.CreateLabel(new Model.Metadata.Label { ParentID = importLabel.ID, Name = _macroImporter.ExternalProvider });
                     labels = _labelManagementService.GetAllLabels();
                     externalProviderImportLabel = (from il in labels
                                    where il.ParentID == importLabel.ID && il.Name == _macroImporter.ExternalProvider
@@ -227,6 +273,8 @@ namespace VF.Macros.Service.Standard
         }
 
         #endregion
+
+        
 
     }
 }

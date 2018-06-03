@@ -39,6 +39,11 @@ namespace VF.Macros.Client.Controls
         private IMacroManagementService _macroManagementService;
 
         /// <summary>
+        /// The External Integration Service
+        /// </summary>
+        private IExternalIntegrationService _externalIntegrationService;
+
+        /// <summary>
         /// The Root Labels TreeNode
         /// </summary>
         private NavigationTreeNodes.RootSectionTreeNode _rootLabelsTreeNode;
@@ -69,13 +74,16 @@ namespace VF.Macros.Client.Controls
         /// </summary>
         /// <param name="labelManagementService">Injected Label Management Service</param>
         /// <param name="macroManagementService">Injected Macro Management Service</param>
-        public NavigationTreeView(ILabelManagementService labelManagementService, IMacroManagementService macroManagementService)
+        /// <param name="externalIntegrationService">Injected External Integration Service</param>
+        public NavigationTreeView(ILabelManagementService labelManagementService, IMacroManagementService macroManagementService,
+            IExternalIntegrationService externalIntegrationService)
         {
             try
             {
                 InitializeComponent();
                 _labelManagementService = labelManagementService;
                 _macroManagementService = macroManagementService;
+                _externalIntegrationService = externalIntegrationService;
             }
             catch (Exception caught)
             {
@@ -540,7 +548,9 @@ namespace VF.Macros.Client.Controls
         /// <param name="e">The Event Arguments</param>
         private void HandleCreateMacroContextMenuClick(object sender, EventArgs e)
         {
-
+            //TODO: do this right, this is just here for testing purposes
+            var createMacroForm = new Forms.MacroEditorForm(_externalIntegrationService);
+            createMacroForm.ShowDialog();
         }
 
         #endregion

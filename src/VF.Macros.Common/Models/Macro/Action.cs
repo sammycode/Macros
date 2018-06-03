@@ -48,7 +48,7 @@ namespace VF.Macros.Common.Models.Macro
             try
             {
                 ActionType = ActionType.Screen;
-                ScreenPosition = new Dimensions { X = 0, Y = 0 };
+                ScreenResolution = new Dimensions { X = 720, Y = 1280 };
                 ScreenPosition = new Dimensions { X = 0, Y = 0 };
                 ActionDelay = 1;
             }

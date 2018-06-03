@@ -38,6 +38,7 @@ namespace VF.Macros.Client
             {
                 _kernel = InitializeContainer();
                 MainForm = _kernel.Get<Forms.MainForm>();
+                //MainForm = _kernel.Get<Forms.MacroEditorForm>();
             }
             catch (Exception caught)
             {

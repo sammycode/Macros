@@ -45,7 +45,38 @@ namespace VF.Macros.External.Nox
         /// <returns>The Macro Assembly</returns>
         public IEnumerable<DataContract.Macro.Action> Build(string source)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(source))
+                {
+                    throw new ArgumentNullException("source");
+                }
+
+                var macroAssembly = new List<DataContract.Macro.Action>();
+
+
+                var sourceLines = GetSourceLines(source);
+                if (sourceLines.Count % 4 != 0)
+                {
+                    throw new ApplicationException("Source is not new, or lines not divisible by 4");
+                }
+
+                while (sourceLines.Count > 0)
+                {
+                    var actionSource = GetNextActionSource(sourceLines);
+                    //TODO: Create Macro Action from it's source
+                    var macroAction = BuildMacroAction(actionSource);
+                    //TODO: Then Add it to the collection
+                    macroAssembly.Add(macroAction);
+                }
+
+                return macroAssembly;
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Building Macro from Source", caught);
+                throw;
+            }
         }
 
         /// <summary>
@@ -55,7 +86,24 @@ namespace VF.Macros.External.Nox
         /// <returns>The Macro Source</returns>
         public string Disassemble(IEnumerable<DataContract.Macro.Action> assembly)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var sbActionSource = new StringBuilder();
+                var assemblyQuery = from a in assembly
+                                    orderby a.ActionDelay ascending
+                                    select a;
+                foreach (var action in assemblyQuery)
+                {
+                    var actionSource = GetActionSource(action);
+                    sbActionSource.Append(actionSource);
+                }
+                return sbActionSource.ToString();
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Disassembling Macro", caught);
+                throw;
+            }
         }
 
         #region [Build Helpers]
@@ -221,6 +269,36 @@ namespace VF.Macros.External.Nox
             catch (Exception caught)
             {
                 logger.Error("Unexpected Error Building Macro Action", caught);
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region [Disassemble Helpers]
+
+        /// <summary>
+        /// Get Action Source
+        /// </summary>
+        /// <param name="action">The Action</param>
+        /// <returns>The Action Source</returns>
+        private string GetActionSource(DataContract.Macro.Action action)
+        {
+            try
+            {
+                var sbAction = new StringBuilder();
+
+                var actionTypeValue = action.ActionType == DataContract.Macro.ActionType.Screen ? 0 : 1;
+                sbAction.Append($"{actionTypeValue}{SEPARATOR_SEQUENCE}{action.ScreenResolution.Y}|{action.ScreenResolution.X}|{COMMAND_MULTI}:1:0:{action.ScreenPosition.Y}:{action.ScreenPosition.X}{SEPARATOR_SEQUENCE}{action.ActionDelay}\r\n");
+                sbAction.Append($"{actionTypeValue}{SEPARATOR_SEQUENCE}{action.ScreenResolution.Y}|{action.ScreenResolution.X}|{COMMAND_MULTI}:0:6{SEPARATOR_SEQUENCE}{action.ActionDelay + 1}\r\n");
+                sbAction.Append($"{actionTypeValue}{SEPARATOR_SEQUENCE}{action.ScreenResolution.Y}|{action.ScreenResolution.X}|{COMMAND_MULTI}:0:6{SEPARATOR_SEQUENCE}{action.ActionDelay + 1}\r\n");
+                sbAction.Append($"{actionTypeValue}{SEPARATOR_SEQUENCE}{action.ScreenResolution.Y}|{action.ScreenResolution.X}|{COMMAND_MULTI}:0:1{SEPARATOR_SEQUENCE}{action.ActionDelay + 1}\r\n");
+
+                return sbAction.ToString();
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Getting Action Source", caught);
                 throw;
             }
         }

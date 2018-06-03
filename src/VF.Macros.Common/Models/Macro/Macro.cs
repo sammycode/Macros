@@ -46,12 +46,12 @@ namespace VF.Macros.Common.Models.Macro
         /// <summary>
         /// The External Sources
         /// </summary>
-        List<MacroExternalSource> ExternalSources { get; set; }
+        public List<MacroExternalSource> ExternalSources { get; set; }
 
         /// <summary>
         /// The Macro Assembly
         /// </summary>
-        List<Action> Assembly { get; set; }
+        public List<Action> Assembly { get; set; }
 
         /// <summary>
         /// Initialize Macro Data Contract
@@ -59,6 +59,7 @@ namespace VF.Macros.Common.Models.Macro
         public Macro()
         {
             ExternalSources = new List<MacroExternalSource>();
+            Assembly = new List<Action>();
         }
 
     }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Model = VF.Macros.Common.Models;
+
 namespace VF.Macros.Service
 {
 
@@ -44,6 +46,20 @@ namespace VF.Macros.Service
         /// Export Macros (overwrite)
         /// </summary>
         void ExportMacros();
+
+        /// <summary>
+        /// Build Macro Action Assembly
+        /// </summary>
+        /// <param name="source">The External Macro Source</param>
+        /// <returns>The Macro Action Assembly</returns>
+        IEnumerable<Model.Macro.Action> BuildMacroActionAssembly(string source);
+
+        /// <summary>
+        /// Get Macro Action Assembly Source
+        /// </summary>
+        /// <param name="assembly">The Macro Action Assembly</param>
+        /// <returns>The Macro Action Assembly Source</returns>
+        string GetMacroActionAssemblySource(IEnumerable<Model.Macro.Action> assembly);
 
     }
 }

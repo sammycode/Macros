@@ -52,12 +52,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ActionEditorControlEventArgs.cs" />
     <Compile Include="Controls\LabelEventArgs.cs" />
     <Compile Include="Controls\LabelTreeView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\LabelTreeView.Designer.cs">
       <DependentUpon>LabelTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MacroActionEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MacroActionEditorControl.Designer.cs">
+      <DependentUpon>MacroActionEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\MacroListViewItems\MacroListViewItem.cs" />
     <Compile Include="Controls\MacrosListView.cs">
@@ -113,6 +120,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\LabelTreeView.resx">
       <DependentUpon>LabelTreeView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MacroActionEditorControl.resx">
+      <DependentUpon>MacroActionEditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MacrosListView.resx">
       <DependentUpon>MacrosListView.cs</DependentUpon>

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.EnabledCheckbox = new System.Windows.Forms.CheckBox();
             this.SortOrderUpDown = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,11 +46,13 @@
             this.ProviderSelectionPanel = new System.Windows.Forms.Panel();
             this.ExternalProviderCombobox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.ErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.SortOrderUpDown)).BeginInit();
             this.EditorTabControl.SuspendLayout();
             this.macroDesignerTabPage.SuspendLayout();
             this.macroSourceTabPage.SuspendLayout();
             this.ProviderSelectionPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // EnabledCheckbox
@@ -113,6 +116,7 @@
             this.CancelButton.TabIndex = 10;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.HandleCancelClick);
             // 
             // OKButton
             // 
@@ -123,6 +127,7 @@
             this.OKButton.TabIndex = 11;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.HandleOKClick);
             // 
             // EditorTabControl
             // 
@@ -136,6 +141,7 @@
             this.EditorTabControl.SelectedIndex = 0;
             this.EditorTabControl.Size = new System.Drawing.Size(798, 452);
             this.EditorTabControl.TabIndex = 12;
+            this.EditorTabControl.SelectedIndexChanged += new System.EventHandler(this.HandleTabIndexChanged);
             // 
             // macroDesignerTabPage
             // 
@@ -174,6 +180,7 @@
             this.AddMacroActionButton.TabIndex = 1;
             this.AddMacroActionButton.Text = "Add";
             this.AddMacroActionButton.UseVisualStyleBackColor = true;
+            this.AddMacroActionButton.Click += new System.EventHandler(this.HandleAddActionClick);
             // 
             // label3
             // 
@@ -238,6 +245,11 @@
             this.label4.Text = "External Provider";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // ErrorProvider
+            // 
+            this.ErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.ErrorProvider.ContainerControl = this;
+            // 
             // MacroEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
@@ -256,6 +268,9 @@
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "MacroEditorForm";
             this.Text = "MacroEditorForm";
+            this.Load += new System.EventHandler(this.HandleFormLoad);
+            this.ResizeBegin += new System.EventHandler(this.HandleResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.HandleResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.SortOrderUpDown)).EndInit();
             this.EditorTabControl.ResumeLayout(false);
             this.macroDesignerTabPage.ResumeLayout(false);
@@ -263,6 +278,7 @@
             this.macroSourceTabPage.ResumeLayout(false);
             this.macroSourceTabPage.PerformLayout();
             this.ProviderSelectionPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -287,5 +303,6 @@
         private System.Windows.Forms.Panel ProviderSelectionPanel;
         private System.Windows.Forms.ComboBox ExternalProviderCombobox;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ErrorProvider ErrorProvider;
     }
 }
