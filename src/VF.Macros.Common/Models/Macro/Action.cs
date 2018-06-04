@@ -38,7 +38,7 @@ namespace VF.Macros.Common.Models.Macro
         /// <summary>
         /// The Action Delay
         /// </summary>
-        public long ActionDelay { get; set; }
+        public int ActionDelay { get; set; }
 
         /// <summary>
         /// Initialize Action Data Contract

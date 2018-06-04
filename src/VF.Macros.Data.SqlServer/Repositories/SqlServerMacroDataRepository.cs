@@ -234,7 +234,8 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// <param name="listOrder">The List Order</param>
         /// <param name="createDate">The Create Date</param>
         /// <param name="enabled">Is Macro Enabled</param>
-        public void CreateMacro(
+        /// <remarks>The Created Macro</remarks>
+        public IMacro CreateMacro(
             long? labelID,
             string name,
             int listOrder,
@@ -250,7 +251,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $"      {SQLServerDataContract.Macros.COLUMN_LIST_ORDER_NAME}, " +
                     $"      {SQLServerDataContract.Macros.COLUMN_CREATE_DATE_NAME}, " +
                     $"      {SQLServerDataContract.Macros.COLUMN_ENABLED_NAME} " +
-                    $" ) VALUES ( " +
+                    $" ) output INSERTED.{SQLServerDataContract.Macros.COLUMN_ID_NAME} VALUES ( " +
                     $"      @labelID, " +
                     $"      @qualifiedName, " +
                     $"      @name, " +
@@ -269,8 +270,8 @@ namespace VF.Macros.Data.SqlServer.Repositories
                         command.Parameters.Add(CreateParameter(DbType.DateTime, "@createDate", createDate));
                         command.Parameters.Add(CreateParameter(DbType.Boolean, "@enabled", enabled));
 
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Created Macro - {recordsAffected} records affected");
+                        long macroID = (long)command.ExecuteScalar();
+                        return GetMacroByID(macroID).FirstOrDefault();
                     }
                 }
             }
@@ -372,7 +373,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// </summary>
         /// <param name="macro">The Macro</param>
         /// <returns>The Macro Source</returns>
-        public IEnumerable<IExternalMacroSource> GetMacroSource(IMacro macro)
+        public IEnumerable<IExternalMacroSource> GetExternalMacroSource(IMacro macro)
         {
             try
             {
@@ -426,6 +427,59 @@ namespace VF.Macros.Data.SqlServer.Repositories
         }
 
         /// <summary>
+        /// Gets External Macro Source by ID
+        /// </summary>
+        /// <param name="id">The External Macro Source ID</param>
+        /// <returns>The External Macro Source</returns>
+        public IEnumerable<IExternalMacroSource> GetExternalMacroSourceByID(long id)
+        {
+            try
+            {
+                var sql =
+                   $" SELECT" +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_ID_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_MACRO_ID_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_CREATE_DATE_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_EXTERNAL_SOURCE_CODE_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_ACCELERATOR_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_INTERVAL_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_MODE_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_PLAY_SECONDS_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_REPEAT_TIMES_NAME}, " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_MACRO_SOURCE_NAME}, " +
+                   $" FROM " +
+                   $"      {SQLServerDataContract.ExternalMacroSource.TABLE_NAME} MS " +
+                   $" WHERE " +
+                   $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_MACRO_ID_NAME} = @macroID; ";
+                using (var connection = CreateConnection())
+                {
+                    connection.Open();
+                    using (var command = CreateCommand(connection, CommandType.Text, sql))
+                    {
+                        command.Parameters.Add(CreateParameter(DbType.Int64, "@macroID", id));
+
+                        var results = new List<IExternalMacroSource>();
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                results.Add(new Entity.SqlServerExternalMacroSourceImpl(reader));
+                            }
+                        }
+
+                        return results;
+                    }
+                }
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Getting External Macro Source by ID", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Creates Macro Source
         /// </summary>
         /// <param name="macro">The Macro</param>
@@ -437,7 +491,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// <param name="playSeconds">The Play Seconds</param>
         /// <param name="playTimes">The PLay Times</param>
         /// <param name="source">The Macro Source</param>
-        public void CreateMacroSource(IMacro macro, DateTime createDate, string externalSourceCode, string acceleratorName, string interval, string mode, string playSeconds, string playTimes, string source)
+        public IExternalMacroSource CreateExternalMacroSource(IMacro macro, DateTime createDate, string externalSourceCode, string acceleratorName, string interval, string mode, string playSeconds, string playTimes, string source)
         {
             try
             {
@@ -457,7 +511,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $"      {SQLServerDataContract.ExternalMacroSource.COLUMN_PLAY_SECONDS_NAME}, " +
                     $"      {SQLServerDataContract.ExternalMacroSource.COLUMN_REPEAT_TIMES_NAME}, " +
                     $"      {SQLServerDataContract.ExternalMacroSource.COLUMN_MACRO_SOURCE_NAME} " +
-                    $" ) VALUES ( " +
+                    $" ) output INSERTED.{SQLServerDataContract.ExternalMacroSource.COLUMN_ID_NAME} VALUES ( " +
                     $"     @macroID,   " +
                     $"     @createDate,   " +
                     $"     @externalSourceCode,   " +
@@ -483,8 +537,10 @@ namespace VF.Macros.Data.SqlServer.Repositories
                         command.Parameters.Add(CreateParameter(DbType.String, "@playTimes", playTimes));
                         command.Parameters.Add(CreateParameter(DbType.String, "@macroSource", source));
 
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Created MacroSource - {recordsAffected} records affected");
+                        //int recordsAffected = command.ExecuteNonQuery();
+                        //logger.Info($"Created MacroSource - {recordsAffected} records affected");
+                        long externalMacroSourceID = (long)command.ExecuteScalar();
+                        return GetExternalMacroSourceByID(externalMacroSourceID).FirstOrDefault();
                     }
                 }
             }
@@ -498,14 +554,14 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// <summary>
         /// Update Macro Source
         /// </summary>
-        /// <param name="macroSource">The Macro Source</param>
-        public void UpdateMacroSource(IExternalMacroSource macroSource)
+        /// <param name="externalMacroSource">The External Macro Source</param>
+        public void UpdateExternalMacroSource(IExternalMacroSource externalMacroSource)
         {
             try
             {
-                if (macroSource == null)
+                if (externalMacroSource == null)
                 {
-                    throw new ArgumentNullException("macroSource");
+                    throw new ArgumentNullException("externalMacroSource");
                 }
 
                 string sql =
@@ -527,17 +583,17 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     connection.Open();
                     using (var command = CreateCommand(connection, CommandType.Text, sql))
                     {
-                        command.Parameters.Add(CreateParameter(DbType.Int64, "@id", macroSource.ID));
-                        command.Parameters.Add(CreateParameter(DbType.Int64, "@macroID", macroSource.MacroID));
-                        command.Parameters.Add(CreateParameter(DbType.DateTime, "@createDate", macroSource.CreateDate));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@qualifiedName", macroSource.QualifiedName));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@externalSourceCode", macroSource.ExternalSourceCode));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@accelerator", macroSource.Accelerator));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@interval", macroSource.Interval));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@mode", macroSource.Mode));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@playSeconds", macroSource.PlaySeconds));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@repeatTimes", macroSource.RepeatTimes));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@macroSource", macroSource.MacroSource));
+                        command.Parameters.Add(CreateParameter(DbType.Int64, "@id", externalMacroSource.ID));
+                        command.Parameters.Add(CreateParameter(DbType.Int64, "@macroID", externalMacroSource.MacroID));
+                        command.Parameters.Add(CreateParameter(DbType.DateTime, "@createDate", externalMacroSource.CreateDate));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@qualifiedName", externalMacroSource.QualifiedName));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@externalSourceCode", externalMacroSource.ExternalSourceCode));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@accelerator", externalMacroSource.Accelerator));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@interval", externalMacroSource.Interval));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@mode", externalMacroSource.Mode));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@playSeconds", externalMacroSource.PlaySeconds));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@repeatTimes", externalMacroSource.RepeatTimes));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@macroSource", externalMacroSource.MacroSource));
 
                         int recordsAffected = command.ExecuteNonQuery();
                         logger.Info($"Updated MacroSource - {recordsAffected} records affected");
@@ -551,6 +607,41 @@ namespace VF.Macros.Data.SqlServer.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes External Macro Source
+        /// </summary>
+        /// <param name="externalMacroSource">The External Macro Source</param>
+        public void DeleteExternalMacroSource(IExternalMacroSource externalMacroSource)
+        {
+            try
+            {
+                if (externalMacroSource == null)
+                {
+                    throw new ArgumentNullException("externalMacroSource");
+                }
+
+                string sql =
+                    $" DELETE FROM {SQLServerDataContract.ExternalMacroSource.TABLE_NAME} " +
+                    $" WHERE " +
+                    $"      {SQLServerDataContract.ExternalMacroSource.COLUMN_ID_NAME} = @id; ";
+                using (var connection = CreateConnection())
+                {
+                    connection.Open();
+                    using (var command = CreateCommand(connection, CommandType.Text, sql))
+                    {
+                        command.Parameters.Add(CreateParameter(DbType.Int64, "@id", externalMacroSource.ID));
+
+                        int recordsAffected = command.ExecuteNonQuery();
+                        logger.Info($"Deleted MacroSource - {recordsAffected} records affected");
+                    }
+                }
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Deleting External Macro Source", caught);
+                throw;
+            }
+        }
 
         /// <summary>
         /// Lookup External Source
@@ -597,7 +688,8 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// </summary>
         /// <param name="code">The Lookup Code</param>
         /// <param name="name">The External Source Name</param>
-        public void CreateExternalSource(string code, string name)
+        /// <returns>The External Source</returns>
+        public IExternalSource CreateExternalSource(string code, string name)
         {
             try
             {
@@ -605,7 +697,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $" INSERT INTO {SQLServerDataContract.ExternalSources.TABLE_NAME} ( " +
                     $"      {SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME}," +
                     $"      {SQLServerDataContract.ExternalSources.COLUMN_NAME_NAME} " +
-                    $" ) VALUES ( " +
+                    $" ) output INSERTED.{SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME} VALUES ( " +
                     $"      @code, @name " +
                     $" );";
                 using (var connection = CreateConnection())
@@ -616,8 +708,10 @@ namespace VF.Macros.Data.SqlServer.Repositories
                         command.Parameters.Add(CreateParameter(DbType.String, "@code", code));
                         command.Parameters.Add(CreateParameter(DbType.String, "@name", name));
 
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Created External Source - {recordsAffected} records affected");
+                        //int recordsAffected = command.ExecuteNonQuery();
+                        //logger.Info($"Created External Source - {recordsAffected} records affected");
+                        string externalSourceCode = (string)command.ExecuteScalar();
+                        return LookupExternalSource(externalSourceCode);
                     }
                 }
             }
@@ -813,7 +907,8 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// <param name="positionX">The X Position</param>
         /// <param name="positionY">The Y Position</param>
         /// <param name="actionDelay">The Action Delay</param>
-        public void CreateMacroAssemblyAction(IMacro macro, int actionType, int screenHeight, int screenWidth, int positionX, int positionY, int actionDelay)
+        /// <returns>The Macro Assembly Action</returns>
+        public IMacroAssemblyAction CreateMacroAssemblyAction(IMacro macro, int actionType, int screenHeight, int screenWidth, int positionX, int positionY, int actionDelay)
         {
             try
             {
@@ -831,7 +926,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $"      {SQLServerDataContract.MacroAssemblyActions.COLUMN_POSITION_X_NAME}, " +
                     $"      {SQLServerDataContract.MacroAssemblyActions.COLUMN_POSITION_Y_NAME}, " +
                     $"      {SQLServerDataContract.MacroAssemblyActions.COLUMN_ACTION_DELAY_NAME} " +
-                    $" ) VALUES ( " +
+                    $" ) output INSERTED.{SQLServerDataContract.MacroAssemblyActions.COLUMN_ID_NAME} VALUES ( " +
                     $"      @macroID," +
                     $"      @actionType,  " +
                     $"      @screenHeight," +
@@ -853,8 +948,10 @@ namespace VF.Macros.Data.SqlServer.Repositories
                         command.Parameters.Add(CreateParameter(DbType.Int32, "@positionY", positionY));
                         command.Parameters.Add(CreateParameter(DbType.Int32, "@actionDelay", actionDelay));
 
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Inserted Macro Assembly Action - {recordsAffected} records affected");
+                        //int recordsAffected = command.ExecuteNonQuery();
+                        //logger.Info($"Inserted Macro Assembly Action - {recordsAffected} records affected");
+                        long macroAssemblyActionID = (long)command.ExecuteScalar();
+                        return GetMacroAssemblyAction(macroAssemblyActionID);
                     }
                 }
             }

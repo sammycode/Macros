@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF.Macros.External.Nox", "V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF.Macros.Client", "VF.Macros.Client\VF.Macros.Client.csproj", "{60DA7C1B-D07B-4BF7-AC11-A44D4AE1736F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF.Macros.Data.SQLite", "VF.Macros.Data.SQLite\VF.Macros.Data.SQLite.csproj", "{D969DEAC-AB55-4115-9429-283EA7DBC170}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{60DA7C1B-D07B-4BF7-AC11-A44D4AE1736F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60DA7C1B-D07B-4BF7-AC11-A44D4AE1736F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60DA7C1B-D07B-4BF7-AC11-A44D4AE1736F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D969DEAC-AB55-4115-9429-283EA7DBC170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D969DEAC-AB55-4115-9429-283EA7DBC170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D969DEAC-AB55-4115-9429-283EA7DBC170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D969DEAC-AB55-4115-9429-283EA7DBC170}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

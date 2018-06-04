@@ -228,7 +228,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $" INSERT INTO {SQLServerDataContract.Labels.TABLE_NAME} ( " +
                     $"      {SQLServerDataContract.Labels.COLUMN_PARENT_ID_NAME}, " +
                     $"      {SQLServerDataContract.Labels.COLUMN_NAME_NAME} " +
-                    $" ) output INSERTED.ID VALUES ( " +
+                    $" ) output INSERTED.{SQLServerDataContract.Labels.COLUMN_ID_NAME} VALUES ( " +
                     $"      @parentID, " +
                     $"      @name " +
                     $" ); ";

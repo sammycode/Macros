@@ -52,7 +52,7 @@ namespace VF.Macros.Data.Repositories
         /// <param name="listOrder">The List Order</param>
         /// <param name="createDate">The Create Date</param>
         /// <param name="enabled">Is Macro Enabled</param>
-        void CreateMacro(
+        IMacro CreateMacro(
             long? labelID, 
             string name, 
             int listOrder, 
@@ -76,11 +76,18 @@ namespace VF.Macros.Data.Repositories
         #region [Macro Source]
 
         /// <summary>
-        /// Gets Macro Source
+        /// Gets External Macro Source
         /// </summary>
         /// <param name="macro">The Macro</param>
-        /// <returns>The Macro Source</returns>
-        IEnumerable<IExternalMacroSource> GetMacroSource(IMacro macro);
+        /// <returns>The External Macro Source</returns>
+        IEnumerable<IExternalMacroSource> GetExternalMacroSource(IMacro macro);
+
+        /// <summary>
+        /// Gets External Macro Source by ID
+        /// </summary>
+        /// <param name="id">The External Macro Source ID</param>
+        /// <returns>The External Macro Source</returns>
+        IEnumerable<IExternalMacroSource> GetExternalMacroSourceByID(long id);
 
         /// <summary>
         /// Creates Macro Source
@@ -94,13 +101,20 @@ namespace VF.Macros.Data.Repositories
         /// <param name="playSeconds">The Play Seconds</param>
         /// <param name="playTimes">The PLay Times</param>
         /// <param name="source">The Macro Source</param>
-        void CreateMacroSource(IMacro macro, DateTime createDate, string externalSourceCode, string acceleratorName, string interval, string mode, string playSeconds, string playTimes, string source);
+        /// <remarks>The External Macro Source</remarks>
+        IExternalMacroSource CreateExternalMacroSource(IMacro macro, DateTime createDate, string externalSourceCode, string acceleratorName, string interval, string mode, string playSeconds, string playTimes, string source);
 
         /// <summary>
-        /// Updates Macro Source
+        /// Updates External Macro Source
         /// </summary>
-        /// <param name="macroSource">The Macro Source</param>
-        void UpdateMacroSource(IExternalMacroSource macroSource);
+        /// <param name="externalMacroSource">The External Macro Source</param>
+        void UpdateExternalMacroSource(IExternalMacroSource externalMacroSource);
+
+        /// <summary>
+        /// Deletes External Macro Source
+        /// </summary>
+        /// <param name="externalMacroSource">The External Macro Source</param>
+        void DeleteExternalMacroSource(IExternalMacroSource externalMacroSource);
 
         #endregion
 
@@ -130,7 +144,8 @@ namespace VF.Macros.Data.Repositories
         /// <param name="positionX">The X Position</param>
         /// <param name="positionY">The Y Position</param>
         /// <param name="actionDelay">The Action Delay</param>
-        void CreateMacroAssemblyAction(IMacro macro, int actionType, int screenHeight, int screenWidth, int positionX, int positionY, int actionDelay);
+        /// <returns>The Macro Assembly Action</returns>
+        IMacroAssemblyAction CreateMacroAssemblyAction(IMacro macro, int actionType, int screenHeight, int screenWidth, int positionX, int positionY, int actionDelay);
 
         /// <summary>
         /// Update Macro Assembly Action
@@ -160,7 +175,10 @@ namespace VF.Macros.Data.Repositories
         /// </summary>
         /// <param name="code">The Lookup Code</param>
         /// <param name="name">The External Source Name</param>
-        void CreateExternalSource(string code, string name);
+        /// <returns>
+        /// The External Source
+        /// </returns>
+        IExternalSource CreateExternalSource(string code, string name);
 
         /// <summary>
         /// Update External Source

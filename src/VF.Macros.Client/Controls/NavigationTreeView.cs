@@ -538,7 +538,26 @@ namespace VF.Macros.Client.Controls
         /// <param name="e">The Event Arguments</param>
         private void HandleDeleteLabelContextMenuClick(object sender, EventArgs e)
         {
-
+            try
+            {
+                //We can only delete label nodes
+                if (TreeView.SelectedNode == null || TreeView.SelectedNode.GetType() != typeof(NavigationTreeNodes.LabelTreeNode))
+                {
+                    return;
+                }
+                var labelToDelete = ((NavigationTreeNodes.LabelTreeNode)TreeView.SelectedNode).BoundLabel;
+                var result = MessageBox.Show($"Are you sure you would like to delete the {labelToDelete.Name} label?",
+                    "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    //TODO: Delete Label
+                }
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Handling Delete Label ContextMenu Click", caught);
+                throw;
+            }
         }
 
         /// <summary>

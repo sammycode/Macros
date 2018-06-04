@@ -136,7 +136,8 @@ namespace VF.Macros.Service.Standard
         /// Create Macro
         /// </summary>
         /// <param name="macro">The Macro Data Contract</param>
-        public void CreateMacro(DataContract.Macro.Macro macro)
+        /// <remarks>The Created Macro</remarks>
+        public DataContract.Macro.Macro CreateMacro(DataContract.Macro.Macro macro)
         {
             try
             {
@@ -147,22 +148,29 @@ namespace VF.Macros.Service.Standard
 
                 //TODO: Implement Create Macro with new model
 
-                throw new NotImplementedException();
+                var newMacro = _dataRepository.MacroRepository.CreateMacro(
+                        macro.Label == null ? null as long? : macro.Label.ID,
+                        macro.Name,
+                        macro.ListOrder, 
+                        DateTime.UtcNow,
+                        macro.Enabled
+                    );
 
-                //_dataRepository.MacroRepository.CreateMacro(
-                //        macro.LabelID,
-                //        macro.QualifiedName,
-                //        macro.Name,
-                //        macro.ListOrder,
-                //        DateTime.Now,
-                //        macro.ExternalProvider,
-                //        true,
-                //        "1",
-                //        "0",
-                //        "0",
-                //        "0#0#0",
-                //        "1");
+                foreach (var macroAction in macro.Assembly)
+                {
+                    _dataRepository.MacroRepository.CreateMacroAssemblyAction(newMacro,
+                        macroAction.ActionType == DataContract.Macro.ActionType.Screen ? 0 : 1,
+                        macroAction.ScreenResolution.Y,
+                        macroAction.ScreenResolution.X,
+                        macroAction.ScreenPosition.X,
+                        macroAction.ScreenPosition.Y,
+                        macroAction.ActionDelay
+                        );
+                }
 
+                
+
+                return BuildMacroDataContract(newMacro);
             }
             catch (Exception caught)
             {
@@ -267,22 +275,25 @@ namespace VF.Macros.Service.Standard
                     throw new ArgumentNullException("macroEntity");
                 }
 
-                //TODO: Implement this after refactor
-                throw new NotImplementedException();
+                DataContract.Metadata.Label label = null;
+                if (macroEntity.LabelID != null)
+                {
+                    var labelResults = _dataRepository.LabelRepository.GetLabelByID(macroEntity.LabelID.Value).FirstOrDefault();
+                    if (labelResults != null) {
+                        label = new DataContract.Metadata.Label { ID = labelResults.ID, ParentID = labelResults.ParentID, Name = labelResults.Name };
+                    }
+                }
 
-                //var macro = new DataContract.Macro.Macro
-                //{
-                //    LabelID = macroEntity.LabelID,
-                //    QualifiedName = macroEntity.QualifiedName,
-                //    Name = macroEntity.Name,
-                //    ListOrder = macroEntity.ListOrder,
-                //    Enabled = macroEntity.Enabled,
-                //    ExternalProvider = macroEntity.ExternalProvider
-                //};
+                var macro = new DataContract.Macro.Macro
+                {
+                    ID = macroEntity.ID,
+                    Label = label,
+                    Name = macroEntity.Name,
+                    ListOrder = macroEntity.ListOrder,
+                    Enabled = macroEntity.Enabled
+                };
 
-                ////TODO: We worrying about the assembly yet?
-
-                //return macro;
+                return macro;
             }
             catch (Exception caught)
             {

@@ -61,5 +61,11 @@ namespace VF.Macros.Service
         /// <returns>The Macro Action Assembly Source</returns>
         string GetMacroActionAssemblySource(IEnumerable<Model.Macro.Action> assembly);
 
+        /// <summary>
+        /// Get External Provider
+        /// </summary>
+        /// <returns>The External Provider</returns>
+        Model.Metadata.ExternalProvider GetExternalProvider();
+
     }
 }

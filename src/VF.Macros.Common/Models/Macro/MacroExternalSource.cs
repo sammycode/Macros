@@ -43,5 +43,7 @@ namespace VF.Macros.Common.Models.Macro
         /// </summary>
         public string MacroSource { get; set; }
 
+        //TODO: Add Macro Run Settings Metadata
+
     }
 }

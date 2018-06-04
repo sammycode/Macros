@@ -39,7 +39,8 @@ namespace VF.Macros.Service
         /// Create Macro
         /// </summary>
         /// <param name="macro">The Macro</param>
-        void CreateMacro(DataContract.Macro.Macro macro);
+        /// <remarks>The Created Macro</remarks>
+        DataContract.Macro.Macro CreateMacro(DataContract.Macro.Macro macro);
 
         /// <summary>
         /// Update Macro

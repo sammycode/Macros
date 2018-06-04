@@ -292,7 +292,6 @@ namespace VF.Macros.Client.Forms
             catch (Exception caught)
             {
                 logger.Error("Unexpected Error Handling TabIndex Changed", caught);
-                throw;
             }
         }
 
