@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using log4net;
 
+using VF.Macros.Common.Settings;
 using VF.Macros.Data.AdoNet;
 
 namespace VF.Macros.Data.SqlServer
@@ -37,7 +38,7 @@ namespace VF.Macros.Data.SqlServer
         {
             try
             {
-                _connectionStringSettings = AdoNetSettings.GetConnectionStringSettings(BaseAdoNetDataRepository.DEFAULT_CONNECTION_STRING_NAME);
+                _connectionStringSettings = AdoNetSettings.GetConnectionStringSettings(DataSettings.ConnectionStringName);
             }
             catch (Exception caught)
             {

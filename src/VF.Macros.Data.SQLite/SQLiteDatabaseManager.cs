@@ -38,7 +38,7 @@ namespace VF.Macros.Data.SQLite
         {
             try
             {
-                _connectionStringSettings = AdoNetSettings.GetConnectionStringSettings(BaseAdoNetDataRepository.DEFAULT_CONNECTION_STRING_NAME);
+                _connectionStringSettings = AdoNetSettings.GetConnectionStringSettings(DataSettings.ConnectionStringName);
             }
             catch (Exception caught)
             {

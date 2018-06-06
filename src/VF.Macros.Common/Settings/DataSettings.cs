@@ -87,6 +87,15 @@ namespace VF.Macros.Common.Settings
         }
 
         /// <summary>
+        /// Gets Connection String Name
+        /// </summary>
+        public static string ConnectionStringName {
+            get {
+                return GetConnectionStringName();
+            }
+        }
+
+        /// <summary>
         /// Gets Connection String Settings
         /// </summary>
         public static ConnectionStringSettings ConnectionStringSettings {

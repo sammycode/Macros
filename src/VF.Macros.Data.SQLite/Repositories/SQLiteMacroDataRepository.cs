@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using log4net;
 
+using VF.Macros.Common.Settings;
 using VF.Macros.Data.AdoNet;
 using VF.Macros.Data.SQLite;
 using VF.Macros.Data.Entity;
@@ -30,7 +31,7 @@ namespace VF.Macros.Data.SQLite.Repositories
         /// Initialize SQLite Macro Data Repository
         /// </summary>
         /// <param name="dbManager">The Database Manager</param>
-        public SQLiteMacroDataRepository(IDbManager dbManager) : base(DEFAULT_CONNECTION_STRING_NAME, dbManager) {}
+        public SQLiteMacroDataRepository(IDbManager dbManager) : base(DataSettings.ConnectionStringName, dbManager) {}
 
         /// <summary>
         /// Get All Macros

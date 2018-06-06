@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using log4net;
 
+using VF.Macros.Common.Settings;
 using VF.Macros.Data.AdoNet;
 using VF.Macros.Data.Entity;
 using VF.Macros.Data.Repositories;
@@ -29,7 +30,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// Initialize SQL Server Label Data Repository
         /// </summary>
         /// <param name="dbManager">The Database Manager</param>
-        public SqlServerLabelDataRepository(IDbManager dbManager) : base(DEFAULT_CONNECTION_STRING_NAME, dbManager) {}
+        public SqlServerLabelDataRepository(IDbManager dbManager) : base(DataSettings.ConnectionStringName, dbManager) {}
 
         /// <summary>
         /// Get All Labels

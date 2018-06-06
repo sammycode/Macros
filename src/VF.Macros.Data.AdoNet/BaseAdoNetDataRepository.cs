@@ -39,11 +39,6 @@ namespace VF.Macros.Data.AdoNet
         protected IDbManager _databaseManager { get; set; }
 
         /// <summary>
-        /// The Default Connection String Name
-        /// </summary>
-        public const string DEFAULT_CONNECTION_STRING_NAME = "DefaultConnection";
-
-        /// <summary>
         /// Initialize Base ADO.NET Data Repository
         /// </summary>
         /// <param name="connectionStringName">The Connection String Name</param>
