@@ -38,7 +38,6 @@ namespace VF.Macros.Client
             {
                 _kernel = InitializeContainer();
                 MainForm = _kernel.Get<Forms.MainForm>();
-                //MainForm = _kernel.Get<Forms.MacroEditorForm>();
             }
             catch (Exception caught)
             {
@@ -56,42 +55,25 @@ namespace VF.Macros.Client
             try
             {
                 logger.Info("Initializing IoC Container");
-
                 var kernel = new StandardKernel();
 
-                /*
-                 * Data Entities
-                 */
-                kernel.Bind<Data.Entity.IExternalMacroSource>()
-                    .To<Data.SqlServer.Entity.SqlServerExternalMacroSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IExternalSource>()
-                    .To<Data.SqlServer.Entity.SqlServerExternalSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.ILabel>()
-                    .To<Data.SqlServer.Entity.SqlServerLabelImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacro>()
-                    .To<Data.SqlServer.Entity.SqlServerMacroImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacroAssemblyAction>()
-                    .To<Data.SqlServer.Entity.SqlServerMacroAssemblyActionImpl>()
-                    .InTransientScope();
-                /*
-                 * Data Repositories
-                 */
-                kernel.Bind<Data.Repositories.ILabelDataRepository>()
-                   .To<Data.SqlServer.Repositories.SqlServerLabelDataRepository>()
-                   .InSingletonScope();
-                kernel.Bind<Data.Repositories.IMacroDataRepository>()
-                   .To<Data.SqlServer.Repositories.SqlServerMacroDataRepository>()
-                   .InSingletonScope();
-                kernel.Bind<Data.IDataRepository>()
-                   .To<Data.SqlServer.SqlServerRepository>()
-                   .InSingletonScope();
-                kernel.Bind<Data.AdoNet.IDbManager>()
-                   .To<Data.SqlServer.SqlServerDatabaseMangaer>()
-                   .InSingletonScope();
+                //TODO: Finish Up bot SQL Server and SQLite Components, and then make this portion configurable, user should be able to use one engine or the other
+                var configuredDataProvider = Common.Settings.DataSettings.DataProvider;
+                if (Common.Settings.DataSettings.PROVIDER_SQLITE.Equals(configuredDataProvider))
+                {
+                    logger.Info("Installing SQLite Data Dependancies");
+                    InstallSQLiteDependancies(kernel);
+                }
+                else if (Common.Settings.DataSettings.PROVIDER_SQL_SERVER.Equals(configuredDataProvider))
+                {
+                    logger.Info("Installing Sql Server Data Dependancies");
+                    InstallSqlServerDependancies(kernel);
+                }
+                else
+                {
+                    logger.Fatal("Unable to determine Data Provider for application composition");
+                    throw new ApplicationException("Unable to configure data provider");
+                }
 
                 /*
                  * External
@@ -138,6 +120,104 @@ namespace VF.Macros.Client
             catch (Exception caught)
             {
                 logger.Error("Unexpected Error Initializing IoC Container", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Install SQLServer Dependancies
+        /// </summary>
+        /// <param name="kernel">The Kernel</param>
+        private static void InstallSqlServerDependancies(StandardKernel kernel)
+        {
+            try
+            {
+                /*
+                 * Data Entities
+                 */
+                kernel.Bind<Data.Entity.IExternalMacroSource>()
+                    .To<Data.SqlServer.Entity.SqlServerExternalMacroSourceImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IExternalSource>()
+                    .To<Data.SqlServer.Entity.SqlServerExternalSourceImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.ILabel>()
+                    .To<Data.SqlServer.Entity.SqlServerLabelImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IMacro>()
+                    .To<Data.SqlServer.Entity.SqlServerMacroImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IMacroAssemblyAction>()
+                    .To<Data.SqlServer.Entity.SqlServerMacroAssemblyActionImpl>()
+                    .InTransientScope();
+                /*
+                 * Data Repositories
+                 */
+                kernel.Bind<Data.Repositories.ILabelDataRepository>()
+                   .To<Data.SqlServer.Repositories.SqlServerLabelDataRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.Repositories.IMacroDataRepository>()
+                   .To<Data.SqlServer.Repositories.SqlServerMacroDataRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.IDataRepository>()
+                   .To<Data.SqlServer.SqlServerRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.AdoNet.IDbManager>()
+                   .To<Data.SqlServer.SqlServerDatabaseMangaer>()
+                   .InSingletonScope();
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Installing SQLServer Dependancies", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Install SQLite Dependancies
+        /// </summary>
+        /// <param name="kernel">The Kernel</param>
+        private static void InstallSQLiteDependancies(StandardKernel kernel)
+        {
+            try
+            {
+                /*
+                 * Data Entities
+                 */
+                kernel.Bind<Data.Entity.IExternalMacroSource>()
+                    .To<Data.SQLite.Entity.SQLiteExternalMacroSourceImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IExternalSource>()
+                    .To<Data.SQLite.Entity.SQLiteExternalSourceImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.ILabel>()
+                    .To<Data.SQLite.Entity.SQLiteLabelImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IMacro>()
+                    .To<Data.SQLite.Entity.SQLiteMacroImpl>()
+                    .InTransientScope();
+                kernel.Bind<Data.Entity.IMacroAssemblyAction>()
+                    .To<Data.SQLite.Entity.SQLiteMacroAssemblyActionImpl>()
+                    .InTransientScope();
+                /*
+                 * Data Repositories
+                 */
+                kernel.Bind<Data.Repositories.ILabelDataRepository>()
+                   .To<Data.SQLite.Repositories.SQLiteLabelDataRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.Repositories.IMacroDataRepository>()
+                   .To<Data.SQLite.Repositories.SQLiteMacroDataRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.IDataRepository>()
+                   .To<Data.SQLite.SQLiteRepository>()
+                   .InSingletonScope();
+                kernel.Bind<Data.AdoNet.IDbManager>()
+                   .To<Data.SQLite.SQLiteDatabaseManager>()
+                   .InSingletonScope();
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Installing SQLite Dependancies", caught);
                 throw;
             }
         }

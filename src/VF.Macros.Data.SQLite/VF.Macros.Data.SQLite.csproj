@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SQLiteLabelDataRepository.cs" />
     <Compile Include="Repositories\SQLiteMacroDataRepository.cs" />
+    <Compile Include="SQLiteConnectionExtensions.cs" />
     <Compile Include="SQLiteDatabaseManager.cs" />
     <Compile Include="SQLiteDataContract.cs" />
     <Compile Include="SQLiteRepository.cs" />
