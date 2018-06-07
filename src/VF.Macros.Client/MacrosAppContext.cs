@@ -78,15 +78,18 @@ namespace VF.Macros.Client
                 /*
                  * External
                  */
-                kernel.Bind<External.Models.IExternalMacroModel>()
-                   .To<External.Models.IExternalMacroModel>()
-                   .InTransientScope();
-                kernel.Bind<External.IMacroAssembler>()
-                    .To<External.Nox.NoxMacroAssembler>()
-                    .InSingletonScope();
-                kernel.Bind<External.IMacroImporter>()
-                    .To<External.Nox.NoxMacroImporter>()
-                    .InSingletonScope();
+                //kernel.Bind<External.Models.IExternalMacroModel>()
+                //   .To<External.Models.IExternalMacroModel>()
+                //   .InTransientScope();
+                kernel.Bind<External.IProvider>()
+                    .To<External.Nox.NoxProvider>()
+                    .InSingletonScope().Named(External.Nox.ProviderSettings.PROVIDER_CODE);
+                //kernel.Bind<External.IMacroAssembler>()
+                //    .To<External.Nox.NoxMacroAssembler>()
+                //    .InSingletonScope().Named(External.Nox.ProviderSettings.PROVIDER_CODE);
+                //kernel.Bind<External.IMacroImporter>()
+                //    .To<External.Nox.NoxMacroImporter>()
+                //    .InSingletonScope().Named(External.Nox.ProviderSettings.PROVIDER_CODE);
 
                 /*
                  * Service
@@ -100,20 +103,6 @@ namespace VF.Macros.Client
                 kernel.Bind<Service.IMacroManagementService>()
                   .To<Service.Standard.StdMacroManagementServiceImpl>()
                   .InSingletonScope();
-
-                /*
-                 * Client Components
-                 */
-                kernel.Bind<Forms.MainFormOld>()
-                 .ToSelf()
-                 .InSingletonScope();
-                kernel.Bind<Controls.NavigationTreeView>()
-                 .ToSelf()
-                 .InSingletonScope();
-                kernel.Bind<Controls.MacrosListView>()
-                 .ToSelf()
-                 .InSingletonScope();
-
 
                 return kernel;
             }
@@ -132,24 +121,6 @@ namespace VF.Macros.Client
         {
             try
             {
-                /*
-                 * Data Entities
-                 */
-                kernel.Bind<Data.Entity.IExternalMacroSource>()
-                    .To<Data.SqlServer.Entity.SqlServerExternalMacroSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IExternalSource>()
-                    .To<Data.SqlServer.Entity.SqlServerExternalSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.ILabel>()
-                    .To<Data.SqlServer.Entity.SqlServerLabelImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacro>()
-                    .To<Data.SqlServer.Entity.SqlServerMacroImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacroAssemblyAction>()
-                    .To<Data.SqlServer.Entity.SqlServerMacroAssemblyActionImpl>()
-                    .InTransientScope();
                 /*
                  * Data Repositories
                  */
@@ -181,24 +152,6 @@ namespace VF.Macros.Client
         {
             try
             {
-                /*
-                 * Data Entities
-                 */
-                kernel.Bind<Data.Entity.IExternalMacroSource>()
-                    .To<Data.SQLite.Entity.SQLiteExternalMacroSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IExternalSource>()
-                    .To<Data.SQLite.Entity.SQLiteExternalSourceImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.ILabel>()
-                    .To<Data.SQLite.Entity.SQLiteLabelImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacro>()
-                    .To<Data.SQLite.Entity.SQLiteMacroImpl>()
-                    .InTransientScope();
-                kernel.Bind<Data.Entity.IMacroAssemblyAction>()
-                    .To<Data.SQLite.Entity.SQLiteMacroAssemblyActionImpl>()
-                    .InTransientScope();
                 /*
                  * Data Repositories
                  */

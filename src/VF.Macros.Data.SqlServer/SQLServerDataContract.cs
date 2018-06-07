@@ -151,18 +151,18 @@ namespace VF.Macros.Data.SqlServer
         }
 
         /// <summary>
-        /// The External Sources Data Contract
+        /// The External Providers Data Contract
         /// </summary>
         /// <remarks>
         /// This is a normalized lookup table
         /// </remarks>
-        public static class ExternalSources
+        public static class ExternalProviders
         {
 
             /// <summary>
             /// The Table Name
             /// </summary>
-            public const string TABLE_NAME = "ExternalSources";
+            public const string TABLE_NAME = "ExternalProviders";
 
             /// <summary>
             /// The Lookup Code Column Name
@@ -170,7 +170,7 @@ namespace VF.Macros.Data.SqlServer
             public const string COLUMN_CODE_NAME = "Code";
 
             /// <summary>
-            /// The External Source Name, Column Name
+            /// The External Provider Name, Column Name
             /// </summary>
             public const string COLUMN_NAME_NAME = "Name";
 

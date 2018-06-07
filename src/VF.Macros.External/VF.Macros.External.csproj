@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="IMacroAssembler.cs" />
     <Compile Include="IMacroImporter.cs" />
+    <Compile Include="IProvider.cs" />
     <Compile Include="Models\IExternalMacroModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

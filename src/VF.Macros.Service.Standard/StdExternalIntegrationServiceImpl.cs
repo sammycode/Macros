@@ -34,14 +34,9 @@ namespace VF.Macros.Service.Standard
         private IDataRepository _dataRepository;
 
         /// <summary>
-        /// The Macro Importer
+        /// The Installed External Providers
         /// </summary>
-        private IMacroImporter _macroImporter;
-
-        /// <summary>
-        /// The Macro Assembler
-        /// </summary>
-        private IMacroAssembler _macroAssembler;
+        private Dictionary<string, IProvider> _installedProviders = new Dictionary<string, IProvider>();
 
         /// <summary>
         /// The Label Management Service
@@ -57,19 +52,22 @@ namespace VF.Macros.Service.Standard
         /// Initialize Standard External Integration Service Implementation
         /// </summary>
         /// <param name="dataRepository">The Data Repository</param>
-        /// <param name="macroImporter">The Macro Importer</param>
+        /// <param name="installedProviders">The Installed Providers</param>
         /// <param name="labelManagementService">The Label Management Service</param>
-        /// <param name="macroAssembler">The Macro Assembler</param>
-        public StdExternalIntegrationServiceImpl(IDataRepository dataRepository, IMacroImporter macroImporter, ILabelManagementService labelManagementService,
-            IMacroAssembler macroAssembler, IMacroManagementService macroManagementService)
+        /// <param name="macroManagementService">The Macro Management Service</param>
+        public StdExternalIntegrationServiceImpl(
+            IDataRepository dataRepository, 
+            IProvider[] installedProviders,
+            ILabelManagementService labelManagementService, 
+            IMacroManagementService macroManagementService)
         {
             try
             {
                 _dataRepository = dataRepository;
-                _macroImporter = macroImporter;
                 _labelManagementService = labelManagementService;
                 _macroManagementService = macroManagementService;
-                _macroAssembler = macroAssembler;
+                installedProviders.ToList().ForEach(p => _installedProviders.Add(p.ProviderCode, p));
+
             }
             catch (Exception caught)
             {
@@ -79,269 +77,397 @@ namespace VF.Macros.Service.Standard
         }
 
         /// <summary>
-        /// Import Macros
+        /// Get Installed External Providers
         /// </summary>
-        public void ImportMacros()
+        /// <returns>The Installed External Providers</returns>
+        public IEnumerable<Model.Metadata.ExternalProvider> GetInstalledProviders()
         {
             try
             {
-
-                //TODO: Come back and Implement this
-
-                //throw new NotImplementedException();
-                logger.Info($"Importing Macros using External Provider: {_macroImporter.ExternalProvider}");
-                var importLabel = GetExternalProviderImportLabel();
-                var importedMacros = _macroImporter.ImportMacros();
-                var provider = GetExternalProvider();
-
-
-
-                foreach (var importedMacro in importedMacros)
+                if (_installedProviders == null)
                 {
-
-                    /*
-                     * What to do, well we either need to talk directly to the data repository,
-                     * or we talk to the service.  It might be much simpler to talk to the service...
-                     */
-
-                    var existingMacro = _macroManagementService.GetMacroByQualifiedName(importedMacro.QualifiedName).FirstOrDefault();
-                    if(existingMacro == null )
-                    {
-                        //TODO: Update Macro Source and assembly
-
-                        
-
-                    }
-                    else
-                    {
-                        //TODO: Create Macro Source and assembly
-                        var newMacro = new Model.Macro.Macro();
-                        newMacro.Label = importLabel;
-                        newMacro.ListOrder = importedMacro.ListOrder;
-                        newMacro.Name = importedMacro.FriendlyName;
-
-                        var externalSource = new Model.Macro.MacroExternalSource();
-                        externalSource.Provider = provider;
-                        externalSource.Macro = newMacro;
-                        externalSource.QualifiedName = importedMacro.QualifiedName;
-                        externalSource.CreateDate = importedMacro.CreateDate;
-                        //TODO: Implement the "Get Source" portion on the macro importer component
-
-                        newMacro = _macroManagementService.CreateMacro(newMacro);
-                    }
-
-                    //var existingMacro = _dataRepository.MacroRepository.GetMacroByQualifiedName(importedMacro.QualifiedName).FirstOrDefault();
-                    //if (existingMacro == null)
-                    //{
-                    //    // This will insert the macro, but we should see if we have it already
-                    //    _dataRepository.MacroRepository.CreateMacro(
-                    //        importLabel.ID,
-                    //        importedMacro.QualifiedName,
-                    //        importedMacro.FriendlyName,
-                    //        importedMacro.ListOrder,
-                    //        importedMacro.CreateDate,
-                    //        _macroImporter.ExternalProvider,
-                    //        true,
-                    //        importedMacro.Accelerator,
-                    //        importedMacro.Interval,
-                    //        importedMacro.Mode,
-                    //        importedMacro.PlaySeconds,
-                    //        importedMacro.RepeatTimes);
-                    //    //We need to create macro source more than likely...
-                    //    existingMacro = _dataRepository.MacroRepository.GetMacroByQualifiedName(importedMacro.QualifiedName).FirstOrDefault();
-                    //    if (existingMacro == null)
-                    //    {
-                    //        throw new ApplicationException("Unable to create macro");
-                    //    }
-                    //    logger.Info($"Imported New Macro - {importedMacro.QualifiedName} {importedMacro.FriendlyName}");
-                    //}
-                    //else
-                    //{
-                    //    existingMacro.Name = importedMacro.FriendlyName;
-                    //    existingMacro.ListOrder = importedMacro.ListOrder;
-                    //    existingMacro.ExternalProvider = _macroImporter.ExternalProvider;
-                    //    existingMacro.Enabled = true;
-                    //    existingMacro.Accelerator = importedMacro.Accelerator;
-                    //    existingMacro.Interval = importedMacro.Interval;
-                    //    existingMacro.Mode = importedMacro.Mode;
-                    //    existingMacro.PlaySeconds = importedMacro.PlaySeconds;
-                    //    existingMacro.RepeatTimes = importedMacro.RepeatTimes;
-                    //    _dataRepository.MacroRepository.UpdateMacro(existingMacro);
-
-                    //    logger.Info($"Updated Existing Macro - {existingMacro.QualifiedName} {existingMacro.Name}");
-                    //}
-
-                    //var existingMacroSource = _dataRepository.MacroRepository.GetMacroSource(existingMacro).FirstOrDefault();
-                    //if (existingMacroSource == null)
-                    //{
-                    //    _dataRepository.MacroRepository.CreateMacroSource(existingMacro, importedMacro.MacroSource);
-                    //    existingMacroSource = _dataRepository.MacroRepository.GetMacroSource(existingMacro).FirstOrDefault();
-                    //    if (existingMacroSource == null)
-                    //    {
-                    //        throw new ApplicationException("Unable to Create Macro Source");
-                    //    }
-                    //    else
-                    //    {
-                    //        existingMacroSource.MacroSource = importedMacro.MacroSource;
-                    //        _dataRepository.MacroRepository.UpdateMacroSource(existingMacroSource);
-                    //    }
-                    //}
+                    throw new ApplicationException("No External Providers Installed");
                 }
-                logger.Info("Import Complete");
+
+                var externalProviders = new List<Model.Metadata.ExternalProvider>();
+                foreach (var provider in _installedProviders)
+                {
+                    externalProviders.Add(BuildExternalProviderModel(provider.Value));
+                }
+                return externalProviders;
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Importing Macros", caught);
+                logger.Error("Unexpected Error Getting Installed Providers", caught);
+                throw;
             }
         }
 
         /// <summary>
         /// Build Macro Action Assembly
         /// </summary>
+        /// <param name="provider">The Provider</param>
+        /// <param name="label">The Label to Associate new Macro With</param>
         /// <param name="source">The External Macro Source</param>
-        /// <returns>The Macro Action Assembly</returns>
-        public IEnumerable<Model.Macro.Action> BuildMacroActionAssembly(string source)
+        /// <returns>The Macro</returns>
+        public Model.Macro.Macro BuildMacroFromSource(Model.Metadata.ExternalProvider provider, Model.Metadata.Label label, string source)
         {
             try
             {
-                var assembly = _macroAssembler.Build(source);
-                return assembly;
+                if (provider == null)
+                {
+                    throw new ArgumentNullException("provider");
+                }
+                if (string.IsNullOrWhiteSpace(source))
+                {
+                    throw new ArgumentNullException("source");
+                }
+                // The label should be able to be null, no problem.  This would cause new macro to not be categorized with anything, it would show up under all macros
+
+                var externalProvider = _installedProviders[provider.Code];
+
+                //Create Macro Header
+                var macro = new Model.Macro.Macro();
+                macro.Label = label;
+                macro.ListOrder = 0;
+                macro.Name = "New Macro";
+
+                //Create External source, and associate source and macro
+                var externalSource = new Model.Macro.MacroExternalSource();
+                macro.ExternalSources.Add(externalSource);
+                externalSource.Macro = macro;
+
+                externalSource.CreateDate = DateTime.UtcNow;
+                externalSource.Provider = provider;
+                externalSource.QualifiedName = externalProvider.GenerateQualifiedName();
+                externalSource.MacroSource = source;
+
+                var assembler = externalProvider.Assembler;
+                try
+                {
+                    var assembly = assembler.Build(source);
+                    var orderedAssembly = assembly.OrderBy(ma => ma.ActionDelay);
+                    orderedAssembly.ToList().ForEach(ma => macro.Assembly.Add(ma));
+                    externalSource.DesignerSupported = true;
+                }
+                catch (Exception assemblerCaught)
+                {
+                    logger.Warn("Macro Source Is Not Understood", assemblerCaught);
+                    externalSource.DesignerSupported = false;
+                }
+                return macro;
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Building Macro Action Assembly", caught);
+                logger.Error("unexpected Error Building Macro From Source", caught);
                 throw;
             }
         }
 
         /// <summary>
-        /// Get Macro Action Assembly Source
+        /// Rebuild Macro from Source
         /// </summary>
-        /// <param name="assembly">The Macro Action Assembly</param>
-        /// <returns>The Macro Action Assembly Source</returns>
-        public string GetMacroActionAssemblySource(IEnumerable<Model.Macro.Action> assembly)
+        /// <param name="provider">The Provider</param>
+        /// <param name="macro">The Macro to Rebuild</param>
+        /// <param name="source">The New Macro Source</param>
+        /// <returns>The Rebuilt Macro</returns>
+        public Model.Macro.Macro ReBuildMacroFromSource(Model.Metadata.ExternalProvider provider, Model.Macro.Macro macro, string source)
         {
             try
             {
-                var assemblySource = _macroAssembler.Disassemble(assembly);
-                return assemblySource;
+                if (provider == null)
+                {
+                    throw new ArgumentNullException("provider");
+                }
+                if (macro == null)
+                {
+                    throw new ArgumentNullException("macro");
+                }
+                if (string.IsNullOrWhiteSpace(source))
+                {
+                    throw new ArgumentNullException("source");
+                }
+
+                var externalProvider = _installedProviders[provider.Code];
+
+                /*
+                 * We look to see if the macro already has an external source for this provider
+                 * if it does we can update that, and if it doesn't we can simply create a new one for
+                 * the provider.
+                 */
+                var externalSource = (from es in macro.ExternalSources
+                                     where es.Provider.Code == provider.Code
+                                     select es).FirstOrDefault();
+                if (externalSource == null)
+                {
+                    externalSource = new Model.Macro.MacroExternalSource();
+                    macro.ExternalSources.Add(externalSource);
+                    externalSource.Macro = macro;
+
+                    externalSource.CreateDate = DateTime.UtcNow;
+                    externalSource.Provider = provider;
+                    externalSource.QualifiedName = externalProvider.GenerateQualifiedName();
+                }
+                externalSource.MacroSource = source;
+
+                macro.Assembly.Clear();
+
+                //TODO: There may be a need to re-generate the source from the assembly for each other provider registered with this macro
+                //This is low priority because at the moment only Nox is offially supported
+                var assembler = externalProvider.Assembler;
+                try
+                {
+                    var assembly = assembler.Build(source);
+                    var orderedAssembly = assembly.OrderBy(ma => ma.ActionDelay);
+                    orderedAssembly.ToList().ForEach(ma => macro.Assembly.Add(ma));
+                    externalSource.DesignerSupported = true;
+                }
+                catch (Exception assemblerCaught)
+                {
+                    logger.Warn("Macro Source Is Not Understood", assemblerCaught);
+                    externalSource.DesignerSupported = false;
+                }
+                
+                return macro;
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Getting Action Assembly Source", caught);
+                logger.Error("Unexpected Error Rebuilding Macro from Source", caught);
                 throw;
             }
         }
 
         /// <summary>
-        /// Export Macros
+        /// Import Macros
         /// </summary>
-        public void ExportMacros()
+        /// <param name="provider">The Provider</param>
+        public void ImportMacros(Model.Metadata.ExternalProvider provider)
+        {
+            try
+            {
+                if (provider == null)
+                {
+                    throw new ArgumentNullException("provider");
+                }
+
+                var externalProvider = _installedProviders[provider.Code];
+                var importer = externalProvider.Importer;
+                var externalMacroModels = importer.ImportMacros();
+
+                foreach (var externalMacroModel in externalMacroModels)
+                {
+                     var importedMacroModel = BuildMacroFromExternalMacroModel(externalProvider, externalMacroModel);
+                    //TODO: Insert or Update imported macro model to the database
+                }
+                
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Importing Macros", caught);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Export Macros (overwrite)
+        /// </summary>
+        /// <param name="provider">The Provider</param>
+        public void ExportMacros(Model.Metadata.ExternalProvider provider)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Get External Provider
+        /// Get Macro Action Assembly Source
         /// </summary>
-        /// <returns>The External Provider</returns>
-        public Model.Metadata.ExternalProvider GetExternalProvider()
+        /// <param name="providerCode">The Provider</param>
+        /// <param name="macro">The Macro</param>
+        /// <returns>The Updated Macro</returns>
+        public Model.Macro.Macro RegenerateMacroSource(Model.Metadata.ExternalProvider provider, Model.Macro.Macro macro)
         {
             try
             {
-                var externalProviderEntity = _dataRepository.MacroRepository.LookupExternalSource(_macroImporter.ExternalProvider);
-                if (externalProviderEntity == null)
+                if (provider == null)
                 {
-                    //TODO: Update Create External Provider to return the entity
-                    externalProviderEntity = _dataRepository.MacroRepository.CreateExternalSource(_macroImporter.ExternalProvider, _macroImporter.ExternalProvider);
+                    throw new ArgumentNullException("provider");
                 }
-                if (externalProviderEntity == null)
+                if (macro == null)
                 {
-                    throw new ApplicationException("External Provider does not exist");
-                } 
-                var externalSourceModel = new Model.Metadata.ExternalProvider { Code = externalProviderEntity.Code, Name = externalProviderEntity.Name };
-                return externalSourceModel;
+                    throw new ArgumentNullException("macro");
+                }
+                var externalProvider = _installedProviders[provider.Code];
+
+                var externalSource = (from es in macro.ExternalSources
+                                      where es.Provider.Code == provider.Code
+                                      select es).FirstOrDefault();
+                if (externalSource == null)
+                {
+                    externalSource = new Model.Macro.MacroExternalSource();
+                    macro.ExternalSources.Add(externalSource);
+                    externalSource.Macro = macro;
+
+                    externalSource.CreateDate = DateTime.UtcNow;
+                    externalSource.Provider = provider;
+                    externalSource.QualifiedName = externalProvider.GenerateQualifiedName();
+                }
+
+                var assembler = externalProvider.Assembler;
+                var dissassembledSource = assembler.Disassemble(macro.Assembly);
+                externalSource.MacroSource = dissassembledSource;
+
+                return macro;
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Getting External Provider", caught);
+                logger.Error("Unexpected Error Regenerating Macro Source", caught);
                 throw;
             }
         }
 
-        #region [Label Helpers]
+        #region [Model Building Helpers]
 
         /// <summary>
-        /// Get Import Label
+        /// Build External Provider Model
         /// </summary>
-        /// <returns>The Import Label</returns>
-        private Model.Metadata.Label GetImportLabel()
+        /// <param name="provider">The Provider</param>
+        /// <returns>The External Provider Model</returns>
+        private Model.Metadata.ExternalProvider BuildExternalProviderModel(IProvider provider)
         {
             try
             {
-                var labels = _labelManagementService.GetAllLabels();
-                var importLabel = (from il in labels
-                                   where il.ParentID == null && il.Name == "Imported"
-                                   select il).FirstOrDefault();
-                if (importLabel == null)
-                {
-                    importLabel = _labelManagementService.CreateLabel(new Model.Metadata.Label { ParentID = null, Name = "Imported" });
-                    //labels = _labelManagementService.GetAllLabels();
-                    //importLabel = (from il in labels
-                    //               where il.ParentID == null && il.Name == "Imported"
-                    //               select il).FirstOrDefault();
-                    if (importLabel == null)
-                    {
-                        throw new ApplicationException("Unable to create Import Label");
-                    }
-                }
-                return importLabel;
+                var externalProviderModel = new Model.Metadata.ExternalProvider();
+                externalProviderModel.Code = provider.ProviderCode;
+                externalProviderModel.Name = provider.ProviderName;
+                return externalProviderModel;
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Getting Import Label", caught);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Get External Provider Import Label
-        /// </summary>
-        /// <returns>The External Provider Import Label</returns>
-        private Model.Metadata.Label GetExternalProviderImportLabel()
-        {
-            try
-            {
-
-                var labels = _labelManagementService.GetAllLabels();
-                var importLabel = GetImportLabel();
-                var externalProviderImportLabel = (from il in labels
-                                                   where il.ParentID == importLabel.ID && il.Name == _macroImporter.ExternalProvider
-                                                   select il).FirstOrDefault();
-                if (externalProviderImportLabel == null)
-                {
-                    externalProviderImportLabel = _labelManagementService.CreateLabel(new Model.Metadata.Label { ParentID = importLabel.ID, Name = _macroImporter.ExternalProvider });
-                    //labels = _labelManagementService.GetAllLabels();
-                    //externalProviderImportLabel = (from il in labels
-                    //               where il.ParentID == importLabel.ID && il.Name == _macroImporter.ExternalProvider
-                    //                               select il).FirstOrDefault();
-                    if (externalProviderImportLabel == null)
-                    {
-                        throw new ApplicationException("Unable to create External Provider Import Label");
-                    }
-                }
-                return externalProviderImportLabel;
-            }
-            catch (Exception caught)
-            {
-                logger.Error("Unexpected Error Getting External Provider Import Label", caught);
+                logger.Error("Unexpected Error Building External Provider Model", caught);
                 throw;
             }
         }
 
         #endregion
 
+        #region [Label Helpers]
 
+
+
+        #endregion
+
+        #region [Macro Model Helpers]
+
+        /// <summary>
+        /// Build Macro from External Macro Model
+        /// </summary>
+        /// <param name="provider">The Provider</param>
+        /// <param name="externalMacroModel">The External Macro Model</param>
+        /// <returns>The Macro</returns>
+        private Model.Macro.Macro BuildMacroFromExternalMacroModel(IProvider provider, External.Models.IExternalMacroModel externalMacroModel)
+        {
+            try
+            {
+                if (provider == null)
+                {
+                    throw new ArgumentNullException("provider");
+                }
+                if (externalMacroModel == null)
+                {
+                    throw new ArgumentNullException("externalMacroModel");
+                }
+                var externalProvider = _installedProviders[provider.ProviderCode];
+                var externalProviderModel = BuildExternalProviderModel(externalProvider);
+                var existingMacro = _macroManagementService.GetMacroByQualifiedName(externalProviderModel, externalMacroModel.QualifiedName).FirstOrDefault();
+
+                //If the existing macro is null, we must build it fresh
+                if (existingMacro == null)
+                {
+                    existingMacro = new Model.Macro.Macro();
+                }
+                existingMacro.Name = externalMacroModel.FriendlyName;
+                existingMacro.ListOrder = externalMacroModel.ListOrder;
+                
+                /*
+                 * Now that we have an existing macro, either newly created or updated
+                 * we should attempt to pull the external source.
+                 * This will typically be an update for an existing macro, or a new external source if
+                 * this is a newly created macro
+                 */
+                var externalSource = (from es in existingMacro.ExternalSources
+                                      where es.Provider.Code == provider.ProviderCode
+                                      select es).FirstOrDefault();
+                if (externalSource == null)
+                {
+                    externalSource = new Model.Macro.MacroExternalSource();
+                    existingMacro.ExternalSources.Add(externalSource);
+                    externalSource.Macro = existingMacro;
+                    externalSource.Provider = BuildExternalProviderModel(externalProvider);
+                }
+                externalSource.QualifiedName = externalMacroModel.QualifiedName;
+                externalSource.CreateDate = externalMacroModel.CreateDate;
+                externalSource.Accelerator = externalMacroModel.Accelerator;
+                externalSource.Interval = externalMacroModel.Interval;
+                externalSource.Mode = externalMacroModel.Mode;
+                externalSource.PlaySeconds = externalMacroModel.PlaySeconds;
+                externalSource.RepeatTimes = externalMacroModel.RepeatTimes;
+
+                externalSource.MacroSource = externalMacroModel.MacroSource;
+
+                /*
+                 * Regenerate the macro assembly
+                 */
+
+                existingMacro.Assembly.Clear();
+                var assembler = externalProvider.Assembler;
+                try
+                {
+                    var assembly = assembler.Build(externalSource.MacroSource);
+                    var orderedAssembly = assembly.OrderBy(ma => ma.ActionDelay);
+                    orderedAssembly.ToList().ForEach(ma => existingMacro.Assembly.Add(ma));
+                    externalSource.DesignerSupported = true;
+                }
+                catch (Exception assemblerCaught)
+                {
+                    logger.Warn("Macro Source Is Not Understood", assemblerCaught);
+                    externalSource.DesignerSupported = false;
+                }
+
+                //TODO: Consider if we will have to ever support or update other external providers
+
+                return existingMacro;
+            }
+            catch (Exception caught)
+            {
+                logger.Error("Unexpected Error Building Macro from External Macro Model", caught);
+                throw;
+            }
+        }
+
+        #endregion
+
+        //#region [External Source Helpers]
+
+        ///// <summary>
+        ///// Build Macro External Source 
+        ///// </summary>
+        ///// <param name="provider">The External Provider</param>
+        ///// <param name="source">The Macro Source</param>
+        ///// <returns>The Model</returns>
+        //private Model.Macro.MacroExternalSource BuildMacroExternalSource(IProvider provider, string source)
+        //{
+        //    try
+        //    {
+        //        // TODO: Allow Provider to Emit A Macro External Source
+        //        throw new NotImplementedException();
+        //    }
+        //    catch (Exception caught)
+        //    {
+        //        logger.Error("Unexpected Error Building Macro External Source", caught);
+        //        throw;
+        //    }
+        //}
+
+        //#endregion
 
     }
 }

@@ -8,9 +8,9 @@ namespace VF.Macros.Data.Entity
 {
 
     /// <summary>
-    /// The External Source Entity
+    /// The External Provider Entity
     /// </summary>
-    public interface IExternalSource
+    public interface IExternalProvider
     {
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace VF.Macros.Data.Entity
         string Code { get; set; }
 
         /// <summary>
-        /// The External Source Name
+        /// The Provider Name
         /// </summary>
         string Name { get; set; }
 

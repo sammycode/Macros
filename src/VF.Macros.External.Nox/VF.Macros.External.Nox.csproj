@@ -52,7 +52,9 @@
     <Compile Include="Models\NoxExternalMacroModelImpl.cs" />
     <Compile Include="NoxMacroAssembler.cs" />
     <Compile Include="NoxMacroImporter.cs" />
+    <Compile Include="NoxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProviderSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VF.Macros.Common\VF.Macros.Common.csproj">

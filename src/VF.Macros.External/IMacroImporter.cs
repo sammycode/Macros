@@ -13,10 +13,10 @@ namespace VF.Macros.External
     public interface IMacroImporter
     {
 
-        /// <summary>
-        /// The External Provider
-        /// </summary>
-        string ExternalProvider { get; }
+        ///// <summary>
+        ///// The External Provider
+        ///// </summary>
+        //string ExternalProvider { get; }
 
         /// <summary>
         /// Imports Macros

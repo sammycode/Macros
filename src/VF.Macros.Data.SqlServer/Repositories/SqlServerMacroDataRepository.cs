@@ -129,9 +129,10 @@ namespace VF.Macros.Data.SqlServer.Repositories
         /// <summary>
         /// Get Macro by Qualified Name
         /// </summary>
+        /// <param name="providerCode">The Provider Code</param>
         /// <param name="qualifiedName">The Qualified Macro Name</param>
         /// <returns>The Macro</returns>
-        public IEnumerable<IMacro> GetMacroByQualifiedName(string qualifiedName)
+        public IEnumerable<IMacro> GetMacroByQualifiedName(string providerCode, string qualifiedName)
         {
             try
             {
@@ -148,6 +149,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     $"      INNER JOIN {SQLServerDataContract.ExternalMacroSource.TABLE_NAME} MS ON MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_MACRO_ID_NAME} = M.{SQLServerDataContract.Macros.COLUMN_ID_NAME} " +
                     $" WHERE " +
                     $"      MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_QUALIFIED_NAME_NAME} = @qualifiedName " +
+                    $"      AND MS.{SQLServerDataContract.ExternalMacroSource.COLUMN_EXTERNAL_SOURCE_CODE_NAME} = @providerCode " +
                     $" ORDER BY" +
                     $"      {SQLServerDataContract.Macros.COLUMN_NAME_NAME} ASC; ";
                 using (var connection = CreateConnection())
@@ -157,6 +159,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
                     {
 
                         command.Parameters.Add(CreateParameter(DbType.String, "@qualifiedName", qualifiedName));
+                        command.Parameters.Add(CreateParameter(DbType.String, "@providerCode", providerCode));
 
                         var results = new List<IMacro>();
                         using (var reader = command.ExecuteReader())
@@ -644,158 +647,7 @@ namespace VF.Macros.Data.SqlServer.Repositories
             }
         }
 
-        /// <summary>
-        /// Lookup External Source
-        /// </summary>
-        /// <param name="code">The Lookup Code</param>
-        /// <returns>The External Source</returns>
-        public IExternalSource LookupExternalSource(string code)
-        {
-            try
-            {
-                string sql =
-                    $" SELECT " +
-                    $"      S.{SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME}, " +
-                    $"      S.{SQLServerDataContract.ExternalSources.COLUMN_NAME_NAME} " +
-                    $" FROM " +
-                    $"      {SQLServerDataContract.ExternalSources.TABLE_NAME} S " +
-                    $" WHERE " +
-                    $"      S.{SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME} = @code; ";
-                using (var connection = CreateConnection())
-                {
-                    connection.Open();
-                    using (var command = CreateCommand(connection, CommandType.Text, sql))
-                    {
-                        command.Parameters.Add(CreateParameter(DbType.String, "@code", code));
-
-                        var results = new List<IExternalSource>();
-                        using (var reader = command.ExecuteReader())
-                        {
-                            results.Add(new Entity.SqlServerExternalSourceImpl(reader));
-                        }
-                        return results.FirstOrDefault();
-                    }
-                }
-            }
-            catch (Exception caught)
-            {
-                logger.Error("Unexpected Error Looking Up External Source", caught);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Create External Source
-        /// </summary>
-        /// <param name="code">The Lookup Code</param>
-        /// <param name="name">The External Source Name</param>
-        /// <returns>The External Source</returns>
-        public IExternalSource CreateExternalSource(string code, string name)
-        {
-            try
-            {
-                string sql =
-                    $" INSERT INTO {SQLServerDataContract.ExternalSources.TABLE_NAME} ( " +
-                    $"      {SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME}," +
-                    $"      {SQLServerDataContract.ExternalSources.COLUMN_NAME_NAME} " +
-                    $" ) output INSERTED.{SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME} VALUES ( " +
-                    $"      @code, @name " +
-                    $" );";
-                using (var connection = CreateConnection())
-                {
-                    connection.Open();
-                    using (var command = CreateCommand(connection, CommandType.Text, sql))
-                    {
-                        command.Parameters.Add(CreateParameter(DbType.String, "@code", code));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@name", name));
-
-                        //int recordsAffected = command.ExecuteNonQuery();
-                        //logger.Info($"Created External Source - {recordsAffected} records affected");
-                        string externalSourceCode = (string)command.ExecuteScalar();
-                        return LookupExternalSource(externalSourceCode);
-                    }
-                }
-            }
-            catch (Exception caught)
-            {
-                logger.Error("Unexpected Error Creating External Source", caught);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Update External Source
-        /// </summary>
-        /// <param name="externalSource">The External Source</param>
-        public void UpdateExternalSource(IExternalSource externalSource)
-        {
-            try
-            {
-                if (externalSource == null)
-                {
-                    throw new ArgumentNullException("externalSource");
-                }
-
-                string sql =
-                    $" UPDATE {SQLServerDataContract.ExternalSources.TABLE_NAME} SET " +
-                    $"      {SQLServerDataContract.ExternalSources.COLUMN_NAME_NAME} = @name " +
-                    $" WHERE " +
-                    $"      {SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME} = @code; ";
-                using (var connection = CreateConnection())
-                {
-                    connection.Open();
-                    using (var command = CreateCommand(connection, CommandType.Text, sql))
-                    {
-                        command.Parameters.Add(CreateParameter(DbType.String, "@code", externalSource.Code));
-                        command.Parameters.Add(CreateParameter(DbType.String, "@name", externalSource.Name));
-
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Updated External Source - {recordsAffected} records affected");
-                    }
-                }
-            }
-            catch (Exception caught)
-            {
-                logger.Error("Unexpected Error Updating External Source", caught);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Delete External Source
-        /// </summary>
-        /// <param name="externalSource">The External Source</param>
-        public void DeleteExternalSource(IExternalSource externalSource)
-        {
-            try
-            {
-                if (externalSource == null)
-                {
-                    throw new ArgumentNullException("externalSource");
-                }
-
-                string sql =
-                    $" DELETE FROM {SQLServerDataContract.ExternalSources.TABLE_NAME} " +
-                    $" WHERE " +
-                    $"      {SQLServerDataContract.ExternalSources.COLUMN_CODE_NAME} = @code; ";
-                using (var connection = CreateConnection())
-                {
-                    connection.Open();
-                    using (var command = CreateCommand(connection, CommandType.Text, sql))
-                    {
-                        command.Parameters.Add(CreateParameter(DbType.String, "@code", externalSource.Code));
-
-                        int recordsAffected = command.ExecuteNonQuery();
-                        logger.Info($"Deleted External Source - {recordsAffected} records affected");
-                    }
-                }
-            }
-            catch (Exception caught)
-            {
-                logger.Error("Unexpected Error Deleting External Source", caught);
-                throw;
-            }
-        }
+        
 
         /// <summary>
         /// Get Macro Assembly

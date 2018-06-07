@@ -38,6 +38,11 @@ namespace VF.Macros.Data.SQLite
         public ILabelDataRepository LabelRepository { get; private set; }
 
         /// <summary>
+        /// The External Provider Repository
+        /// </summary>
+        public IExternalProviderDataRepository ExternalProviderRepository { get; private set; }
+
+        /// <summary>
         /// Initialize SQLite Repository
         /// </summary>
         /// <param name="dbManager">The Database Manager</param>
@@ -48,6 +53,7 @@ namespace VF.Macros.Data.SQLite
                 _databaseManager = dbManager;
                 MacroRepository = new Repositories.SQLiteMacroDataRepository(_databaseManager);
                 LabelRepository = new Repositories.SQLiteLabelDataRepository(_databaseManager);
+                ExternalProviderRepository = new Repositories.SQLiteExternalProviderDataRepository(_databaseManager);
             }
             catch (Exception caught)
             {

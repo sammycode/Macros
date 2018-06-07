@@ -121,12 +121,6 @@
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainFormOld.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MainFormOld.Designer.cs">
-      <DependentUpon>MainFormOld.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\SelectLabelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,9 +151,6 @@
     <EmbeddedResource Include="Forms\MacroEditorForm.resx">
       <DependentUpon>MacroEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainFormOld.resx">
-      <DependentUpon>MainFormOld.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectLabelForm.resx">
       <DependentUpon>SelectLabelForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -184,7 +175,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

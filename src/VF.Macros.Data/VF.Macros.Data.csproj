@@ -44,12 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\IExternalMacroSource.cs" />
-    <Compile Include="Entity\IExternalSource.cs" />
+    <Compile Include="Entity\IExternalProvider.cs" />
     <Compile Include="Entity\ILabel.cs" />
     <Compile Include="Entity\IMacro.cs" />
     <Compile Include="Entity\IMacroAssemblyAction.cs" />
     <Compile Include="IDataRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IExternalProviderDataRepository.cs" />
     <Compile Include="Repositories\ILabelDataRepository.cs" />
     <Compile Include="Repositories\IMacroDataRepository.cs" />
   </ItemGroup>

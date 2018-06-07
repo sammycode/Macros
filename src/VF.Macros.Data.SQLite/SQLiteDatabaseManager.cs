@@ -86,7 +86,7 @@ namespace VF.Macros.Data.SQLite
                     CreateLabelsTable(connection);
                     CreateMacrosTable(connection);
                     CreateMacroAssemblyActionsTable(connection);
-                    CreateExternalSourcesTable(connection);
+                    CreateExternalProvidersTable(connection);
                     CreateExternalMacroSourcesTable(connection);
 
                     logger.Info("Seeding Initial Data");
@@ -252,17 +252,17 @@ namespace VF.Macros.Data.SQLite
         }
 
         /// <summary>
-        /// Create External Sources Table
+        /// Create External Providers Table
         /// </summary>
         /// <param name="connection">The Connection</param>
-        private void CreateExternalSourcesTable(SQLiteConnection connection)
+        private void CreateExternalProvidersTable(SQLiteConnection connection)
         {
             try
             {
                 var sql =
-                    $" CREATE TABLE {SQLiteDataContract.ExternalSources.TABLE_NAME} ( " +
-                    $"    {SQLiteDataContract.ExternalSources.COLUMN_CODE_NAME} TEXT PRIMARY KEY" +
-                    $"    , {SQLiteDataContract.ExternalSources.COLUMN_NAME_NAME} TEXT NOT NULL " +
+                    $" CREATE TABLE {SQLiteDataContract.ExternalProviders.TABLE_NAME} ( " +
+                    $"    {SQLiteDataContract.ExternalProviders.COLUMN_CODE_NAME} TEXT PRIMARY KEY" +
+                    $"    , {SQLiteDataContract.ExternalProviders.COLUMN_NAME_NAME} TEXT NOT NULL " +
                     $" ); ";
                 using (var command = new SQLiteCommand(sql, connection))
                 {
@@ -272,7 +272,7 @@ namespace VF.Macros.Data.SQLite
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Creating External Sources Table", caught);
+                logger.Error("Unexpected Error Creating External Providers Table", caught);
                 throw;
             }
         }

@@ -42,8 +42,36 @@ namespace VF.Macros.Common.Models.Macro
         /// The Macro Source
         /// </summary>
         public string MacroSource { get; set; }
+        
+        /// <summary>
+        /// Is the Designer Supported?
+        /// </summary>
+        public bool DesignerSupported { get; set; }
 
-        //TODO: Add Macro Run Settings Metadata
+        /// <summary>
+        /// The Accelerator
+        /// </summary>
+        public string Accelerator { get; set; }
+
+        /// <summary>
+        /// The Interval
+        /// </summary>
+        public string Interval { get; set; }
+
+        /// <summary>
+        /// The Mode
+        /// </summary>
+        public string Mode { get; set; }
+
+        /// <summary>
+        /// The Play Seconds
+        /// </summary>
+        public string PlaySeconds { get; set; }
+
+        /// <summary>
+        /// The Repeat Times
+        /// </summary>
+        public string RepeatTimes { get; set; }
 
     }
 }

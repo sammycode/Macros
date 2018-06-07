@@ -8,7 +8,7 @@ using log4net;
 
 using VF.Macros.Data;
 using VF.Macros.External;
-using DataContract = VF.Macros.Common.Models;
+using Models = VF.Macros.Common.Models;
 using DataEntity = VF.Macros.Data.Entity;
 
 namespace VF.Macros.Service.Standard
@@ -35,21 +35,14 @@ namespace VF.Macros.Service.Standard
         private IDataRepository _dataRepository;
 
         /// <summary>
-        /// The Macro Assembler
-        /// </summary>
-        private IMacroAssembler _macroAssembler;
-
-        /// <summary>
         /// Initialize Standard Macro Management Service Implementation
         /// </summary>
         /// <param name="dataRepository">The Data Repository</param>
-        /// <param name="macroAssembler">The Macro Assembler</param>
-        public StdMacroManagementServiceImpl(IDataRepository dataRepository, IMacroAssembler macroAssembler)
+        public StdMacroManagementServiceImpl(IDataRepository dataRepository)
         {
             try
             {
                 _dataRepository = dataRepository;
-                _macroAssembler = macroAssembler;
             }
             catch (Exception caught)
             {
@@ -62,13 +55,13 @@ namespace VF.Macros.Service.Standard
         /// Get All Macros
         /// </summary>
         /// <returns>The Macros</returns>
-        public IEnumerable<DataContract.Macro.Macro> GetAllMacros()
+        public IEnumerable<Models.Macro.Macro> GetAllMacros()
         {
             try
             {
                 //We are not assembling yet...
                 var macros = _dataRepository.MacroRepository.GetAllMacros();
-                var results = new List<DataContract.Macro.Macro>();
+                var results = new List<Models.Macro.Macro>();
                 macros.ToList().ForEach(me => results.Add(BuildMacroDataContract(me)));
                 return results;
             }
@@ -82,18 +75,23 @@ namespace VF.Macros.Service.Standard
         /// <summary>
         /// Get Macro by Qualified Name
         /// </summary>
+        /// <param name="provider">The Provider</param>
         /// <param name="qualifiedName">The Qualified Macro Name</param>
         /// <returns>The Macro</returns>
-        public IEnumerable<DataContract.Macro.Macro> GetMacroByQualifiedName(string qualifiedName)
+        public IEnumerable<Models.Macro.Macro> GetMacroByQualifiedName(Models.Metadata.ExternalProvider provider, string qualifiedName)
         {
             try
             {
+                if (provider == null)
+                {
+                    throw new ArgumentNullException("provider");
+                }
                 if (string.IsNullOrWhiteSpace(qualifiedName))
                 {
                     throw new ArgumentNullException("qualifiedName");
                 }
-                var macros = _dataRepository.MacroRepository.GetMacroByQualifiedName(qualifiedName);
-                var results = new List<DataContract.Macro.Macro>();
+                var macros = _dataRepository.MacroRepository.GetMacroByQualifiedName(provider.Code, qualifiedName);
+                var results = new List<Models.Macro.Macro>();
                 macros.ToList().ForEach(me => results.Add(BuildMacroDataContract(me)));
                 return results;
             }
@@ -109,7 +107,7 @@ namespace VF.Macros.Service.Standard
         /// </summary>
         /// <param name="label">The Label</param>
         /// <returns></returns>
-        public IEnumerable<DataContract.Macro.Macro> GetMacrosByLabel(DataContract.Metadata.Label label)
+        public IEnumerable<Models.Macro.Macro> GetMacrosByLabel(Models.Metadata.Label label)
         {
             try
             {
@@ -120,7 +118,7 @@ namespace VF.Macros.Service.Standard
                 }
 
                 var macros = _dataRepository.MacroRepository.GetMacrosByLabelID(label.ID);
-                var results = new List<DataContract.Macro.Macro>();
+                var results = new List<Models.Macro.Macro>();
                 macros.ToList().ForEach(me => results.Add(BuildMacroDataContract(me)));
                 return results;
 
@@ -137,7 +135,7 @@ namespace VF.Macros.Service.Standard
         /// </summary>
         /// <param name="macro">The Macro Data Contract</param>
         /// <remarks>The Created Macro</remarks>
-        public DataContract.Macro.Macro CreateMacro(DataContract.Macro.Macro macro)
+        public Models.Macro.Macro CreateMacro(Models.Macro.Macro macro)
         {
             try
             {
@@ -159,7 +157,7 @@ namespace VF.Macros.Service.Standard
                 foreach (var macroAction in macro.Assembly)
                 {
                     _dataRepository.MacroRepository.CreateMacroAssemblyAction(newMacro,
-                        macroAction.ActionType == DataContract.Macro.ActionType.Screen ? 0 : 1,
+                        macroAction.ActionType == Models.Macro.ActionType.Screen ? 0 : 1,
                         macroAction.ScreenResolution.Y,
                         macroAction.ScreenResolution.X,
                         macroAction.ScreenPosition.X,
@@ -183,7 +181,7 @@ namespace VF.Macros.Service.Standard
         /// Update Macro
         /// </summary>
         /// <param name="macro">The Macro Data Contract</param>
-        public void UpdateMacro(DataContract.Macro.Macro macro)
+        public void UpdateMacro(Models.Macro.Macro macro)
         {
             try
             {
@@ -225,7 +223,7 @@ namespace VF.Macros.Service.Standard
         /// Deleting Macro
         /// </summary>
         /// <param name="macro">The Macro Data Contract</param>
-        public void DeleteMacro(DataContract.Macro.Macro macro)
+        public void DeleteMacro(Models.Macro.Macro macro)
         {
             try
             {
@@ -266,7 +264,7 @@ namespace VF.Macros.Service.Standard
         /// </summary>
         /// <param name="macroEntity">The Macro Data Entity</param>
         /// <returns>The Macro Data Contract</returns>
-        private DataContract.Macro.Macro BuildMacroDataContract(DataEntity.IMacro macroEntity)
+        private Models.Macro.Macro BuildMacroDataContract(DataEntity.IMacro macroEntity)
         {
             try
             {
@@ -275,16 +273,16 @@ namespace VF.Macros.Service.Standard
                     throw new ArgumentNullException("macroEntity");
                 }
 
-                DataContract.Metadata.Label label = null;
+                Models.Metadata.Label label = null;
                 if (macroEntity.LabelID != null)
                 {
                     var labelResults = _dataRepository.LabelRepository.GetLabelByID(macroEntity.LabelID.Value).FirstOrDefault();
                     if (labelResults != null) {
-                        label = new DataContract.Metadata.Label { ID = labelResults.ID, ParentID = labelResults.ParentID, Name = labelResults.Name };
+                        label = new Models.Metadata.Label { ID = labelResults.ID, ParentID = labelResults.ParentID, Name = labelResults.Name };
                     }
                 }
 
-                var macro = new DataContract.Macro.Macro
+                var macro = new Models.Macro.Macro
                 {
                     ID = macroEntity.ID,
                     Label = label,

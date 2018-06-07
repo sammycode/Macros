@@ -9,19 +9,19 @@ using log4net;
 
 using VF.Macros.Data.Entity;
 
-namespace VF.Macros.Data.SQLite.Entity
+namespace VF.Macros.Data.SqlServer.Entity
 {
 
     /// <summary>
-    /// The SQLite External Source Implementation
+    /// The Sql Server External Provider Implementation
     /// </summary>
-    public class SQLiteExternalSourceImpl : IExternalSource
+    public class SqlServerExternalProviderImpl : IExternalProvider
     {
 
         /// <summary>
         /// The Logger
         /// </summary>
-        private static readonly ILog logger = LogManager.GetLogger(typeof(SQLiteExternalSourceImpl));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(SqlServerExternalProviderImpl));
 
         #region [Fields]
 
@@ -31,7 +31,7 @@ namespace VF.Macros.Data.SQLite.Entity
         public string Code { get; set; }
 
         /// <summary>
-        /// The External Source Name
+        /// The External Provider Name
         /// </summary>
         public string Name { get; set; }
 
@@ -57,15 +57,15 @@ namespace VF.Macros.Data.SQLite.Entity
         #endregion
 
         /// <summary>
-        /// Initialize SQLite External Source Implementation
+        /// Initialize Sql Server External Provider Implementation
         /// </summary>
-        public SQLiteExternalSourceImpl() {}
+        public SqlServerExternalProviderImpl() {}
 
         /// <summary>
-        /// Initialize SQLite External Source Implementation with DataReader
+        /// Initialize SQL Server External Provider Implementation with DataReader
         /// </summary>
-        /// <param name="reader">The DataReader</param>
-        public SQLiteExternalSourceImpl(IDataReader reader)
+        /// <param name="reader"></param>
+        public SqlServerExternalProviderImpl(IDataReader reader)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace VF.Macros.Data.SQLite.Entity
             }
             catch (Exception caught)
             {
-                logger.Error("Unexpected Error Initializing SQLite External Source Implementation with Datareader", caught);
+                logger.Error("Unexpected Error Initializing Sql Server External Source Implementation", caught);
                 throw;
             }
         }
@@ -102,8 +102,8 @@ namespace VF.Macros.Data.SQLite.Entity
                     throw new ArgumentNullException("reader");
                 }
 
-                _indexCode = reader.GetOrdinal(SQLiteDataContract.ExternalSources.COLUMN_CODE_NAME);
-                _indexName = reader.GetOrdinal(SQLiteDataContract.ExternalSources.COLUMN_NAME_NAME);
+                _indexCode = reader.GetOrdinal(SQLServerDataContract.ExternalProviders.COLUMN_CODE_NAME);
+                _indexName = reader.GetOrdinal(SQLServerDataContract.ExternalProviders.COLUMN_NAME_NAME);
                 _mapped = true;
             }
             catch (Exception caught)

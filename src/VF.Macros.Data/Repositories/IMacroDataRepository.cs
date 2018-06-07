@@ -33,9 +33,10 @@ namespace VF.Macros.Data.Repositories
         /// <summary>
         /// Gets Macro by Qualified Name
         /// </summary>
+        /// <param name="providerCode">The External Provider Code</param>
         /// <param name="qualifiedName">The Qualified Name</param>
         /// <returns>The Macro</returns>
-        IEnumerable<IMacro> GetMacroByQualifiedName(string qualifiedName);
+        IEnumerable<IMacro> GetMacroByQualifiedName(string providerCode, string qualifiedName);
 
         /// <summary>
         /// Get Macros By LabelID
@@ -158,39 +159,6 @@ namespace VF.Macros.Data.Repositories
         /// </summary>
         /// <param name="assemblyAction">The Macro Assembly Action</param>
         void DeleteMacroAssemblyAction(IMacroAssemblyAction assemblyAction);
-
-        #endregion
-
-        #region [External Sources]
-
-        /// <summary>
-        /// Lookup External Source
-        /// </summary>
-        /// <param name="code">The Lookup Code</param>
-        /// <returns>The External Source</returns>
-        IExternalSource LookupExternalSource(string code);
-
-        /// <summary>
-        /// Create External Source
-        /// </summary>
-        /// <param name="code">The Lookup Code</param>
-        /// <param name="name">The External Source Name</param>
-        /// <returns>
-        /// The External Source
-        /// </returns>
-        IExternalSource CreateExternalSource(string code, string name);
-
-        /// <summary>
-        /// Update External Source
-        /// </summary>
-        /// <param name="externalSource">The External Source</param>
-        void UpdateExternalSource(IExternalSource externalSource);
-
-        /// <summary>
-        /// Delete External Source
-        /// </summary>
-        /// <param name="externalSource">The External Source</param>
-        void DeleteExternalSource(IExternalSource externalSource);
 
         #endregion
 

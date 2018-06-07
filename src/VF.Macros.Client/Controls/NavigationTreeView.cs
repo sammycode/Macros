@@ -498,7 +498,8 @@ namespace VF.Macros.Client.Controls
                 // We are only interested in editing Labels
                 if (TreeView.SelectedNode.GetType() == typeof(NavigationTreeNodes.LabelTreeNode)) {
                     var labelToEdit = (TreeView.SelectedNode as NavigationTreeNodes.LabelTreeNode).BoundLabel;
-                    long? originalParent = labelToEdit.ParentID.Value;
+                    
+                    long? originalParent = labelToEdit.ParentID == null ? null as long? : labelToEdit.ParentID.Value;
                     using (var editLabelForm = new Forms.EditLabelForm(labelToEdit))
                     {
                         if (editLabelForm.ShowDialog() == DialogResult.OK)

@@ -279,14 +279,14 @@ namespace VF.Macros.Client.Forms
                 var tabTag = selectedTab.Tag as string;
                 if ("DESIGN".Equals(tabTag))
                 {
-                    var macroSource = MacroSourceTextbox.Text.Trim();
-                    SourceMacro.Assembly = _externalIntegrationService.BuildMacroActionAssembly(macroSource)
-                        .ToList();
+                    //var macroSource = MacroSourceTextbox.Text.Trim();
+                    //SourceMacro.Assembly = _externalIntegrationService.BuildMacroActionAssembly("NOX", macroSource)
+                    //    .ToList();
                     RefreshDesigner();
                 }
                 else if ("SOURCE".Equals(tabTag))
                 {
-                    MacroSourceTextbox.Text = _externalIntegrationService.GetMacroActionAssemblySource(SourceMacro.Assembly);
+                    //MacroSourceTextbox.Text = _externalIntegrationService.GetMacroActionAssemblySource("NOX", SourceMacro.Assembly);
                 }
             }
             catch (Exception caught)

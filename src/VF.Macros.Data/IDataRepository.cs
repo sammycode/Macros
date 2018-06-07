@@ -23,5 +23,10 @@ namespace VF.Macros.Data
         /// </summary>
         Repositories.ILabelDataRepository LabelRepository { get; }
 
+        /// <summary>
+        /// The External Provider Repository
+        /// </summary>
+        Repositories.IExternalProviderDataRepository ExternalProviderRepository { get; }
+
     }
 }

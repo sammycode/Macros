@@ -38,34 +38,48 @@ namespace VF.Macros.Service
     {
 
         /// <summary>
-        /// Import New Macros
+        /// Get Installed External Providers
         /// </summary>
-        void ImportMacros();
-
-        /// <summary>
-        /// Export Macros (overwrite)
-        /// </summary>
-        void ExportMacros();
+        /// <returns>The Installed External Providers</returns>
+        IEnumerable<Model.Metadata.ExternalProvider> GetInstalledProviders();
 
         /// <summary>
         /// Build Macro Action Assembly
         /// </summary>
+        /// <param name="provider">The Provider</param>
+        /// <param name="label">The Label to associate new macro with</param>
         /// <param name="source">The External Macro Source</param>
-        /// <returns>The Macro Action Assembly</returns>
-        IEnumerable<Model.Macro.Action> BuildMacroActionAssembly(string source);
+        /// <returns>The Macro</returns>
+        Model.Macro.Macro BuildMacroFromSource(Model.Metadata.ExternalProvider provider, Model.Metadata.Label label, string source);
+
+        /// <summary>
+        /// Rebuild Macro from Source
+        /// </summary>
+        /// <param name="provider">The Provider</param>
+        /// <param name="macro">The Macro to Rebuild</param>
+        /// <param name="source">The Macro Source</param>
+        /// <returns>The Rebuilt Macro</returns>
+        Model.Macro.Macro ReBuildMacroFromSource(Model.Metadata.ExternalProvider provider, Model.Macro.Macro macro, string source);
 
         /// <summary>
         /// Get Macro Action Assembly Source
         /// </summary>
-        /// <param name="assembly">The Macro Action Assembly</param>
-        /// <returns>The Macro Action Assembly Source</returns>
-        string GetMacroActionAssemblySource(IEnumerable<Model.Macro.Action> assembly);
+        /// <param name="providerCode">The Provider</param>
+        /// <param name="macro">The Macro</param>
+        /// <returns>The Updated Macro</returns>
+        Model.Macro.Macro RegenerateMacroSource(Model.Metadata.ExternalProvider provider, Model.Macro.Macro macro);
 
         /// <summary>
-        /// Get External Provider
+        /// Import Macros
         /// </summary>
-        /// <returns>The External Provider</returns>
-        Model.Metadata.ExternalProvider GetExternalProvider();
+        /// <param name="provider">The Provider</param>
+        void ImportMacros(Model.Metadata.ExternalProvider provider);
+
+        /// <summary>
+        /// Export Macros (overwrite)
+        /// </summary>
+        /// <param name="provider">The Provider</param>
+        void ExportMacros(Model.Metadata.ExternalProvider provider);
 
     }
 }

@@ -364,7 +364,8 @@ namespace VF.Macros.Client.Forms
             {
                 //var externalIntegrationService = IoC.GetComponent<VF.Macros.Service.IExternalIntegrationService>();
                 ///externalIntegrationService.ImportMacros();
-                _externalIntegrationService.ImportMacros();
+                //_externalIntegrationService.ImportMacros("Nox");
+                //TODO: Import using external integration service
                 MessageBox.Show("Successfully Imported Macros", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
             catch (Exception caught)

@@ -45,11 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\SqlServerExternalMacroSourceImpl.cs" />
-    <Compile Include="Entity\SqlServerExternalSourceImpl.cs" />
+    <Compile Include="Entity\SqlServerExternalProviderImpl.cs" />
     <Compile Include="Entity\SqlServerLabelImpl.cs" />
     <Compile Include="Entity\SqlServerMacroAssemblyActionImpl.cs" />
     <Compile Include="Entity\SqlServerMacroImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\SqlServerExternalProviderDataRepository.cs" />
     <Compile Include="Repositories\SqlServerLabelDataRepository.cs" />
     <Compile Include="Repositories\SqlServerMacroDataRepository.cs" />
     <Compile Include="SqlServerDatabaseMangaer.cs" />

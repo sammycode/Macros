@@ -38,6 +38,11 @@ namespace VF.Macros.Data.SqlServer
         public ILabelDataRepository LabelRepository { get; private set; }
 
         /// <summary>
+        /// The External Provider Repository
+        /// </summary>
+        public IExternalProviderDataRepository ExternalProviderRepository { get; private set; }
+
+        /// <summary>
         /// Initialize Sql Server Repository
         /// </summary>
         public SqlServerRepository(IDbManager databaseManager)
@@ -48,6 +53,7 @@ namespace VF.Macros.Data.SqlServer
                 _databaseManager = databaseManager;
                 MacroRepository = new Repositories.SqlServerMacroDataRepository(_databaseManager);
                 LabelRepository = new Repositories.SqlServerLabelDataRepository(_databaseManager);
+                ExternalProviderRepository = new Repositories.SqlServerExternalProviderDataRepository(_databaseManager);
             }
             catch (Exception caught)
             {
