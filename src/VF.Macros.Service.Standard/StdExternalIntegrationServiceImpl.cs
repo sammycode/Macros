@@ -56,9 +56,9 @@ namespace VF.Macros.Service.Standard
         /// <param name="labelManagementService">The Label Management Service</param>
         /// <param name="macroManagementService">The Macro Management Service</param>
         public StdExternalIntegrationServiceImpl(
-            IDataRepository dataRepository, 
+            IDataRepository dataRepository,
             IProvider[] installedProviders,
-            ILabelManagementService labelManagementService, 
+            ILabelManagementService labelManagementService,
             IMacroManagementService macroManagementService)
         {
             try
@@ -196,8 +196,8 @@ namespace VF.Macros.Service.Standard
                  * the provider.
                  */
                 var externalSource = (from es in macro.ExternalSources
-                                     where es.Provider.Code == provider.Code
-                                     select es).FirstOrDefault();
+                                      where es.Provider.Code == provider.Code
+                                      select es).FirstOrDefault();
                 if (externalSource == null)
                 {
                     externalSource = new Model.Macro.MacroExternalSource();
@@ -227,7 +227,7 @@ namespace VF.Macros.Service.Standard
                     logger.Warn("Macro Source Is Not Understood", assemblerCaught);
                     externalSource.DesignerSupported = false;
                 }
-                
+
                 return macro;
             }
             catch (Exception caught)
@@ -241,7 +241,8 @@ namespace VF.Macros.Service.Standard
         /// Import Macros
         /// </summary>
         /// <param name="provider">The Provider</param>
-        public void ImportMacros(Model.Metadata.ExternalProvider provider)
+        /// <returns>The Imported Macros</returns>
+        public IEnumerable<Model.Macro.Macro> ImportMacros(Model.Metadata.ExternalProvider provider)
         {
             try
             {
@@ -254,12 +255,13 @@ namespace VF.Macros.Service.Standard
                 var importer = externalProvider.Importer;
                 var externalMacroModels = importer.ImportMacros();
 
+                var importedMacros = new List<Model.Macro.Macro>();
                 foreach (var externalMacroModel in externalMacroModels)
                 {
-                     var importedMacroModel = BuildMacroFromExternalMacroModel(externalProvider, externalMacroModel);
-                    //TODO: Insert or Update imported macro model to the database
+                    var importedMacroModel = BuildMacroFromExternalMacroModel(externalProvider, externalMacroModel);
+                    importedMacros.Add(importedMacroModel);
                 }
-                
+                return importedMacros;
             }
             catch (Exception caught)
             {
@@ -386,7 +388,7 @@ namespace VF.Macros.Service.Standard
                 }
                 existingMacro.Name = externalMacroModel.FriendlyName;
                 existingMacro.ListOrder = externalMacroModel.ListOrder;
-                
+
                 /*
                  * Now that we have an existing macro, either newly created or updated
                  * we should attempt to pull the external source.

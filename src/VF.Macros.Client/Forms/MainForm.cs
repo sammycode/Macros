@@ -362,11 +362,15 @@ namespace VF.Macros.Client.Forms
         {
             try
             {
-                //var externalIntegrationService = IoC.GetComponent<VF.Macros.Service.IExternalIntegrationService>();
-                ///externalIntegrationService.ImportMacros();
-                //_externalIntegrationService.ImportMacros("Nox");
-                //TODO: Import using external integration service
-                MessageBox.Show("Successfully Imported Macros", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                using (var importForm = new ImportForm(_externalIntegrationService))
+                {
+                    var result = importForm.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        //TODO: Refresh Form
+                        //TODO: Will need to have a more generalized function to refresh the MainForm components in a predictable way
+                    }
+                }
             }
             catch (Exception caught)
             {

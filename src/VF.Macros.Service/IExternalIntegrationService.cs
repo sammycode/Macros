@@ -73,7 +73,8 @@ namespace VF.Macros.Service
         /// Import Macros
         /// </summary>
         /// <param name="provider">The Provider</param>
-        void ImportMacros(Model.Metadata.ExternalProvider provider);
+        /// <returns>The Imported Macros</returns>
+        IEnumerable<Model.Macro.Macro> ImportMacros(Model.Metadata.ExternalProvider provider);
 
         /// <summary>
         /// Export Macros (overwrite)

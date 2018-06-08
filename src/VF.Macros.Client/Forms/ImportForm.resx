@@ -117,15 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="richTextBox1.Text" xml:space="preserve">
-    <value>You are about to import macros with the selected External Provider.
-
-Generally speaking the External Provider knows enough about the emulator to figure out everything it needs to to import macros.  But there are a few things you should keep in mind.
-
-1.  Every macro has a Qualified Name.  This is a unique name assigned to the macro.  If you have a macro in this application with the same Qualified Name in the emulator, it will be overwritten.  This generally isn't a problem however, and is normally desirable.  It works the same in reverse.  If you import a macro, and then modify it here, when exported it will simply update the macro in the emulator.
-
-2.  There isn't a perfect pairity between macros in this system, and macros that exist in the emulator.  In truth, the Qualified Name, and the Macro Source is External provider specific.  This provides you with the ability to create a macro in one emulator, and then install it on two.  But if you modify a macro in an emulator, and then import it here, it could end up persisting and overwriting it in other emulators.  It's generally best to consider this application, as the authority in which is the final copy.  So once you manage a macro by importing it, you should modify it only from within this application, and then export it to get it back into the emulator.
-
-Press OK to import macros, or press Cancel to Abort.</value>
+  <metadata name="ImportedMacrosImageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="ImportedMacrosImageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAC4
+        AwAAAk1TRnQBSQFMAwEBAAEIAQABCAEAARABAAEQAQAE/wEZAQAI/wFCAU0BNgcAATYDAAEoAwABQAMA
+        ARADAAEBAQABGAYAAQzSADD2kAAD9ipCA/aQAAP2A0IB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHv
+        AfAB8QHvAfAB8QHvAfAB8QHvAfAB4gGhARsB4gGhARsB4gGhARsB4gGhARsB4gGhARsD9pAAA/YDQgHx
+        Ae8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHiAaEBGwHkAasBNgHo
+        AeEB2AHkAasBNgHiAaEBGwP2kAAD9gNCAfEB7wHwD0IB8QHvAfAB8QHvAfAB4gGhARsB4AHZAc0B8QHv
+        AfAB4gHZAcwB4gGhARsD9pAAA/YDQgHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHx
+        Ae8B8AHxAe8B8AHiAaEBGwHiAaEBGwHiAaEBGwHiAaEBGwHiAaEBGwP2kAAD9gNCAfEB7wHwDEIB8QHv
+        AfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAD9pAAA/YDQgHxAe8B8AHx
+        Ae8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8A9CA/aQAAP2A0IB8QHvAfASQgHx
+        Ae8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AHxAe8B8AP2kAAD9gNCAfEB7wHwAfEB7wHwAfEB7wHw
+        AfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAeIBoQEbAeIBoQEbAeIBoQEbAeIBoQEbAeIBoQEb
+        A/aQAAP2A0IB8QHvAfAMQgHxAe8B8AHxAe8B8AHxAe8B8AHiAaEBGwHtAeABygHxAe8B8AHtAeABygHi
+        AaEBGwP2kAAD9gNCAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHwAfEB7wHw
+        AeIBoQEbAeQBqwE2Ae4B5QHWAeQBqwE2AeIBoQEbA/aQAAP2A0IB8QHvAfAB8QHvAfAB8QHvAfAB8QHv
+        AfAB8QHvAfAB8QHvAfAB8QHvAfAB8QHvAfAB4gGhARsB4gGhARsB4gGhARsB4gGhARsB4gGhARsD9pAA
+        A/YqQgP2kAAw9pAAAUIBTQE+BwABPgMAASgDAAFAAwABEAMAAQEBAAEBBQABgBcAA/8BAAL/fgAL
+</value>
   </data>
 </root>

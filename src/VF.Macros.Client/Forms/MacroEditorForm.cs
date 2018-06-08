@@ -124,6 +124,37 @@ namespace VF.Macros.Client.Forms
             }
         }
 
+        /// <summary>
+        /// Handles Begin Resize
+        /// </summary>
+        /// <param name="sender">The Sender</param>
+        /// <param name="e">The Event Arguments</param>
+        /// <remarks>
+        /// Suspending Layout in this form when a user is resizing the window,
+        /// because for some reason the multiples of User Controls for the Macro Actions,
+        /// are causing some pretty severe lag in Windows 10.  I have no real explanation for this
+        /// 
+        /// It kinda makes resizing this form feel really unnatural, but it feels 
+        /// better than the alternative.
+        /// </remarks>
+        private void HandleResizeBegin(object sender, EventArgs e)
+        {
+            SuspendLayout();
+        }
+
+        /// <summary>
+        /// Handles End Resize
+        /// </summary>
+        /// <param name="sender">The Sender</param>
+        /// <param name="e">The Event Arguments</param>
+        /// <remarks>
+        /// Resuming Layout when Resizing stops, just to allow things to start redrawing again.
+        /// </remarks>
+        private void HandleResizeEnd(object sender, EventArgs e)
+        {
+            ResumeLayout();
+        }
+
         #endregion
 
         #region [Validation Helpers]
@@ -351,14 +382,6 @@ namespace VF.Macros.Client.Forms
 
         #endregion
 
-        private void HandleResizeBegin(object sender, EventArgs e)
-        {
-            SuspendLayout();
-        }
 
-        private void HandleResizeEnd(object sender, EventArgs e)
-        {
-            ResumeLayout();
-        }
     }
 }

@@ -291,6 +291,7 @@ namespace VF.Macros.Data.SQLite
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_MACRO_ID_NAME} INTEGER NOT NULL " +
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_CREATE_DATE_NAME} DATETIME NOT NULL " +
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_EXTERNAL_SOURCE_CODE_NAME} TEXT NOT NULL " +
+                    $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_QUALIFIED_NAME_NAME} TEXT NOT NULL " +
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_ACCELERATOR_NAME} TEXT NOT NULL " +
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_INTERVAL_NAME} TEXT NOT NULL " +
                     $"    , {SQLiteDataContract.ExternalMacroSource.COLUMN_MODE_NAME} TEXT NOT NULL " +
