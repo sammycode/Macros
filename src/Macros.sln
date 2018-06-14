@@ -23,6 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF.Macros.Client", "VF.Macr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VF.Macros.Data.SQLite", "VF.Macros.Data.SQLite\VF.Macros.Data.SQLite.csproj", "{D969DEAC-AB55-4115-9429-283EA7DBC170}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{670BC774-FF0C-4CC0-8458-23A4F854A796}"
+	ProjectSection(SolutionItems) = preProject
+		gpl-2.0.txt = gpl-2.0.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

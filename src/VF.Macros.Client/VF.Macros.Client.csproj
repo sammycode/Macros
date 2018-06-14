@@ -179,7 +179,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\gpl-2.0.txt">
+      <Link>gpl-2.0.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VF.Macros.Common\VF.Macros.Common.csproj">
       <Project>{1c5a2fd9-24d8-4553-9137-4c18ae79b7e2}</Project>
