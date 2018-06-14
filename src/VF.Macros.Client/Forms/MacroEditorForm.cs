@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2018  Mike Jamer
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,6 +51,11 @@ namespace VF.Macros.Client.Forms
         public Model.Macro.Macro SourceMacro { get; private set; }
 
         /// <summary>
+        /// The External Provider
+        /// </summary>
+        private Model.Metadata.ExternalProvider ExternalProvider { get; set; }
+
+        /// <summary>
         /// The External Integration Service
         /// </summary>
         private IExternalIntegrationService _externalIntegrationService;
@@ -55,6 +78,26 @@ namespace VF.Macros.Client.Forms
                 InitializeComponent();
                 SourceMacro = sourceMacro ?? throw new ArgumentNullException("macro");
                 _externalIntegrationService = externalIntegrationService ?? throw new ArgumentNullException("externalIntegrationService");
+
+
+                //TODO: Adjust this, this is a band-aid
+                /*
+                 * Moving to a model where multiple external providers are go be supported, and 
+                 * at the current state, this form is no longer adequate.  So for the moment, this 
+                 * component is being forced in as the first provider to allow macro code generation
+                 * when switching between designer and source.
+                 * 
+                 * Once the external push integration is finally re-inabled, this will be less important, a
+                 * and the form will only be concerned with modifying the intent model.
+                 * 
+                 * Though there will likely be a live update feature, and at that point the intended target will
+                 * be selected by a drop down or another similar widget.
+                 */
+                ExternalProvider = _externalIntegrationService.GetInstalledProviders().FirstOrDefault();
+                if (ExternalProvider == null)
+                {
+                    throw new ApplicationException("External Provider Not Installed");
+                }
             }
             catch (Exception caught)
             {
@@ -318,6 +361,8 @@ namespace VF.Macros.Client.Forms
                 else if ("SOURCE".Equals(tabTag))
                 {
                     //MacroSourceTextbox.Text = _externalIntegrationService.GetMacroActionAssemblySource("NOX", SourceMacro.Assembly);
+                    SourceMacro = _externalIntegrationService.RegenerateMacroSource(ExternalProvider, SourceMacro);
+                    MacroSourceTextbox.Text = SourceMacro.ToString();
                 }
             }
             catch (Exception caught)
